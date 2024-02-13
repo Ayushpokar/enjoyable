@@ -43,16 +43,29 @@
     </div>
   </header>
 
-  <div style="background-color:rgb(96, 191, 123);width: 400px;margin-left: 12cm;margin-top: 2cm;" class="rounded" >
-    <form action="" class="rounded">
-      <h5 class="text-center text-primary-emphasis">PNR Status</h5>
-      <div class="col- pr-3">
-        <label for="pnr" class="form-label  text-light">Input your PNR:</label>
-        <input type="text" class="form-control">
+  <form action="" style="background-color: rgb(153, 218, 112);width: 500px;margin: auto;margin-top: 2cm;" class="text-center  form-control">
+    <h3>Define Your Journey</h3>
+    <div>
+      <label for="train" class="form-label">Train number</label>
+      <input type="text" class="form-control">
+    </div>
+    <div>
+    <label for="" class="form-label">Rate your journey</label>
+    <select name="rating" id="" class="form-control">
+    <option value="" selected>Rate</option>
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    </select>
+    </div>
+    <label for="comment" class="form-label">Comment your journey</label>
+    <input type="text" class="form-control">
+    <div class="text-center mt-2 pb-2 ">
+        <button class="btn btn-primary ">Send Feedback</button>
       </div>
-      <div class="text-center mt-2 pb-2">
-        <button class="btn btn-primary ">Check PNR</button>
-      </div>
-    </form>
-  </div>
+  </form>
+
 </body>
+</html>
