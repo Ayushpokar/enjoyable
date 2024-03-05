@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Station Master Page</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+form {
+    display: grid;
+    gap: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+}
+
+button {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Add Station</h2>
+        <form id="stationForm" action="" method="post">
+            {% csrf_token %}
+            <label for="station_name">Station Name:</label>
+            <input type="text" id="station_name">
+            
+            <label for="station_code">Station Code:</label>
+            <input type="text" id="station_code">
+            
+            <label for="location">Location:</label>
+            <input type="text" id="location" >
+            
+            <label for="zone">Zone:</label>
+            <input type="text" id="zone" >
+            
+            <label for="state">State:</label>
+            <input type="text" id="state" >
+            
+            <button type="submit" onclick="validateForm()">Add Station</button>
+        </form>
+    </div>
+
+    <script>
+        function validateForm() {
+    var station_name = document.getElementById('stationame').value;
+    var station_code = document.getElementById('station_code').value;
+    var location = document.getElementById('location').value;
+    var zone = document.getElementById('zone').value;
+    var state = document.getElementById('state').value;
+
+    // Basic validation, you can add more complex validation as needed
+    if (!station_name || !station_code || !location || !zone || !state) {
+        alert('Please fill in all fields');
+        return;
+    }
+
+    // Assuming you want to send the data to a server or perform some action
+    // For now, let's just log the data to the console
+    console.log('Station Name:', station_name);
+    console.log('Station Code:', station_code);
+    console.log('Location:', location);
+    console.log('Zone:', zone);
+    console.log('State:', state);
+
+    // Reset the form after submission
+    document.getElementById('stationForm').reset();
+}
+
+    </script>
+</body>
+</html>

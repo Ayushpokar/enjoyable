@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Train</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    #addTrainForm {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 600px; /* Limiting form width for better readability */
+      width: 100%;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    label {
+      width: 48%; /* Adjust the width based on your design preference */
+      margin-bottom: 8px;
+    }
+
+    input, button {
+      width: 48%; /* Adjust the width based on your design preference */
+      box-sizing: border-box;
+      padding: 8px;
+      margin-bottom: 16px;
+    }
+
+    button {
+      width: 100%; /* Make the button full-width */
+    }
+  </style>
+</head>
+<body>
+
+<div id="addTrainForm">
+  <h2 style="text-align: center;">Add Train</h2>
+  <form id="trainForm" action="addtrains" method="post">
+
+    {% csrf_token %}
+
+    <label for="train_no">Train Number:</label>
+    <input type="text" id="train_no" required>
+
+    <label for="trainName">Train Name:</label>
+    <input type="text" id="trainName" required>
+    
+    <label for="source_station"> Source Station: </label>
+    <input type="text" id="source_station" required>
+
+    <label for="dest_station">Destination Station:</label>
+    <input type="text" id="dest_station" required>
+
+    <label for="depart_datetime">Departure Date & Time:</label>
+    <input type="datetime-local" id="depart_datetime" required>
+
+    <label for="arrival_datetime">Arrival Date & Time:</label>
+    <input type="datetime-local" id="arrival_datetime" required>
+
+    <label for="journey_duration">Journey Duration:</label>
+    <input type="text" id="journey_duration" required>
+
+    <label for="available_seats">Available Seats</label> 
+    <input type="number" id="available_seats" required>
+
+    <label for="total_seats">Total Seats:</label>
+    <input type="number" id="total_seats" required>
+    
+    <button type="submit" onclick="addTrain()">Add Train</button>
+  </form>
+</div>
+
+<script>
+  function addTrain() {
+    const train_no = document.getElementById("train_no").value;
+    const train_name = document.getElementById('train_name').value;
+    const source_station = document.getElementById('source_station').value;
+    const dest_station = document.getElementById('dest_staion').value;
+    const depart_datetime = document.getElementById('depart_datetime').value;
+    const arrival_datetime = document.getElementById('arrival_datetime').value;
+    const journey_duration = document.getElementById('journey_duration').value;
+    const total_seats = document.getElementById('total_seats').value;
+    // Perform validation if needed
+
+    // Create a new train object or perform other actions with the data
+    const newTrain = {
+      name: trainName,
+      destination: destination,
+      departureTime: departureTime
+    };
+
+    // You can send the data to a server, update the UI, etc.
+
+    // For now, let's log the data to the console
+    console.log('New Train:', newTrain);
+
+    // You can reset the form if needed
+    document.getElementById('trainForm').reset();
+  }
+</script>
+
+</body>
+</html>
