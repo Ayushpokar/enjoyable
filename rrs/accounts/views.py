@@ -11,14 +11,14 @@ from django.contrib.auth.decorators import login_required
 def register(request):
     if request.method == 'POST':
 
-       username = request.POST['username']
-       password = request.POST['password']
-       firstname = request.POST['firstname']
-       lastname = request.POST['lastname']
-       dob = request.POST['dob']
-       email = request.POST['email']
-       mobile = request.POST['mobile']
-       address = request.POST['address']
+       username = request.POST.get('username')
+       password = request.POST.get('password')
+       firstname = request.POST.get('firstname')
+       lastname = request.POST.get('lastname')
+       dob = request.POST.get('dob')
+       email = request.POST.get('email')
+       mobile = request.POST.get('mobile')
+       address = request.POST.get('address')
        # for save the information of user 
 
        myuser = user_master(firstname=firstname, lastname=lastname, username=username,
