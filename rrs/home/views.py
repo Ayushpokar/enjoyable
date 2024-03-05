@@ -19,6 +19,86 @@ def index(request):
     # return HttpResponse('hello')
     return render(request, 'index.html', {'title': 'Home'})
 
+def register(request):
+    if request.method == 'POST':
+
+       username = request.POST.get('username')
+       password = request.POST.get('password')
+       firstname = request.POST.get('firstname')
+       lastname = request.POST.get('lastname')
+       dob = request.POST.get('dob')
+       email = request.POST.get('email')
+       mobile = request.POST.get('mobile')
+       address = request.POST.get('address')
+       # for save the information of user 
+
+       myuser = user_master(firstname=firstname, lastname=lastname, username=username,
+                             password=password, dob=dob, email=email, mobile=mobile, address=address)
+       myuser.save()
+
+       
+       # check user already exists or not.'''
+
+       ''' if myuser.objects.filter(username = username).exists():
+               messages.error(request, "Username already exists.")
+               return redirect('/home/register')
+
+       elif len(password) < 8:
+               messages.error(request, "Password must be at least 8 characters long.")
+               return redirect('/home/register')'''
+
+
+       return  HttpResponse("data added successfully.")
+
+
+
+    return render(request, 'register.html')
+
+
+
+def handlelogin(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        
+        try:
+            user = user_master.objects.get(username=username, password=password)
+            request.session['userid'] = user.id
+            request.session['username'] = user.username
+            print('User Logged In Successfully!')
+            return render(request, 'dashboard.html')
+            
+
+        except user_master.DoesNotExist:
+            messages.error(request, "User does not exist")
+            return HttpResponse('Invalid Username or Password')
+            
+    return render(request,'login.html')
+
+
+def logout_view(request):
+        logout(request)
+        return render(request, "login.html")        
+
+
+@login_required(login_url='/login')
+def dashboard(request):
+    print(request.user) 
+    # get the current logged in user details from session and display on dashboard page
+    
+    context={'userdetail':request.user} 
+    username = request.session['username']
+    print(username +' is logged in ')
+    return render(request, 'dashboard.html', {'username' : username},context)
+
+
+
+
+
+
+
+
+
 
 def about(request):
     return HttpResponse('this is about page and store all information about project.')
@@ -77,19 +157,7 @@ def feedback(request):
 # register
         
 
-@login_required
-def dashboard(request):
-        context={}
-        uid = request.user.id
-        usr_obj = User.objects.get(id=uid)
-        context['usr'] = usr_obj
 
-     
-        print(usr_obj.email)
-        print(User.objects.all())    
-        user = get_object_or_404(User, id=request.user.id)
-        context["user"] = user
-        return render(request,"dashboard.html",context)
 
 
 # addd trains in database
@@ -98,17 +166,17 @@ def addtrains(request):
      if  request.method == 'POST' :
             form =AddTrainForm(data=request.POST)
             if form.is_valid():
-               train_no= form.cleaned_data['train_no']
-               train_name = form.cleaned_data['train_name']
-               source_station = form.cleaned_data['source_station']
-               dest_station = form.cleaned_data['dest_station']
-               depart_datetime= form.cleaned_data['depart_datetime']
-               arrival_datetime= form.cleaned_data['arrival_datetime']
-               journey_duration= form.cleaned_data['journey_duration']
-               available_seats =  int(form.cleaned_data['available_seats'])
-               total_seats=int(form.cleaned_data('total_seats'))
-               new_train = train_master('train_no','train_name', 'source_station', 'dest_station','depart_datetime','arrival_datetime','journey_duration',
-                                        'total_seats')
+               train_no= form.cleaned_data.get('train_no')
+               train_name = form.cleaned_data.get('train_name')
+               source_station = form.cleaned_data.get('source_station')
+               dest_station = form.cleaned_data.get('dest_station')
+               depart_datetime= form.cleaned_data.get('depart_datetime')
+               arrival_datetime= form.cleaned_data.get('arrival_datetime')
+               journey_duration= form.cleaned_data.get('journey_duration')
+               available_seats =  int(form.cleaned_data.get('available_seats'))
+               total_seats=int(form.cleaned_data.get('total_seats'))
+               new_train = train_master(train_no=train_no,train_name=train_name, source_station=source_station, dest_station=dest_station,depart_datetime=depart_datetime,
+                                        arrival_datetime=arrival_datetime,journey_duration=journey_duration,total_seats=total_seats)
                new_train.save()
             else:
                  return  HttpResponse("Invalid Form Data")
@@ -122,7 +190,13 @@ def addstation(request):
     if request.method == 'POST':
         form = StationForm(request.POST)
         if form.is_valid():
-            form.save()
+            station_name = form.cleaned_data['station_name']
+            station_code= form.cleaned_data['station_code']
+            location= form.cleaned_data['location']
+            zone= form.cleaned_data['zone']
+            state= form.cleaned_data['state']
+            new_station=station_master(station_name=station_name,station_code=station_code,location=location,zone=zone,state=state)
+            new_station.save()
             return HttpResponse('successfully added station.')  # Replace 'success_page' with the URL to redirect after successful form submission
     else:
         form = StationForm()
