@@ -8,6 +8,7 @@ urlpatterns = [
     path('logout/', views.logout_view, name="logout"),
 
     path('', views.index, name='index'),
+      path('home', views.index, name='home'),
     path('dashboard/', views.dashboard, name="dashboard"),
     path('search',views.searchtrains,name="search"),  # search train by source and destination
     path('Train schedules/', views.schedules, name="Train schedules"),

@@ -17,7 +17,7 @@
            
     
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="#" class="nav-link px-2 text-white">Home</a></li>
+              <li><a href="/home" class="nav-link px-2 text-white">Home</a></li>
               <li><a href="#" class="nav-link px-2 text-white">Train Schedules</a></li>
               <li><a href="#" class="nav-link px-2 text-white">PNR Status</a></li>
               <li><a href="#" class="nav-link px-2 text-white">Cancel Ticket</a></li>
@@ -28,14 +28,14 @@
            
     
             <div class="ms-10">
-              <button type="Submit" class="btn btn-outline-light "><a href="login" style=" text-decoration: none;">Login</a></button>
-              <button type="Submit"  class="btn btn-warning "><a href="register" style="text-decoration: none;" >Sign-up</a></button>
+              <button type="Submit" class="btn btn-outline-light "><a href="/login/" style=" text-decoration: none;">Login</a></button>
+              <button type="Submit"  class="btn btn-warning "><a href="/register/" style="text-decoration: none;" >Sign-up</a></button>
             </div>
           </div>
         </div>
       </header>
     
-<form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;"  method='post'>
+<form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;" action="http://127.0.0.1:8000/search" method='post'>
   {% csrf_token %}
     <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
     <div class="col-12">

@@ -205,24 +205,25 @@ def addstation(request):
     return render(request, 'station.html', {'form': StationForm})
 
 def searchtrains(request):
+        print("hello world")
     # get the data from the user
-    if request.method == 'POST':
-        form=searchtrainform(request.POST)
-        if form.is_valid():
-            source=form.cleaned_data['source']
-            destination=form.cleaned_data['destination']
-            date=form.cleaned_data['date']
-            classes=form.cleaned_data['classes']
-            trainlist=train_master.objects.filter(source=source).filter(destination=destination).filter(departure_datetime=date)
-            source=station_master.objects.get(pk=source)
-            destination=station_master.objects.get(pk=destination)
-            print (source.station_name + " to "+ destination.station_name+ " on "+date+"\n")
-            print ("Available Classes are : \n 1. First Class \n  2. Second Class \n 3. Third Class ")
+    # if request.method == 'POST':
+    #     form=searchtrainform(request.POST)
+    #     if form.is_valid():
+    #         source=form.cleaned_data['source']
+    #         destination=form.cleaned_data['destination']
+    #         date=form.cleaned_data['date']
+    #         classes=form.cleaned_data['classes']
+    #         trainlist=train_master.objects.filter(source=source).filter(destination=destination).filter(departure_datetime=date)
+    #         source=station_master.objects.get(pk=source)
+    #         destination=station_master.objects.get(pk=destination)
+    #         print (source.station_name + " to "+ destination.station_name+ " on "+date+"\n")
+    #         print ("Available Classes are : \n 1. First Class \n  2. Second Class \n 3. Third Class ")
         
-        else:
-            HttpResponse('Invalid data format.')
+    #     else:
+    #         HttpResponse('Invalid data format.')
         
-    else:
+    # else:
         return render(request,"searchedtrains.html")    
         # trainlist=[]
         # for t in trains:
