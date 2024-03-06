@@ -23,6 +23,14 @@ class StationForm(forms.ModelForm):
         model = station_master
         fields = ['station_name', 'station_code', 'location', 'zone', 'state']
 
+
+class searchtrainform(forms.Form):
+    source=forms.CharField()
+    destination=forms.CharField()   
+    date=forms.DateField()
+    classes=forms.ChoiceField(choices=[('1A',"First Class"),("2AC","Second AC Class"),("3AC",'Third AC'),("SL","Sleeper")])
+
+
 '''from .forms import *
 import os, json
 from django.http import HttpResponseRedirect

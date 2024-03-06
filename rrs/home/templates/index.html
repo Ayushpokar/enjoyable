@@ -35,11 +35,12 @@
         </div>
       </header>
     
-<form  class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;">
+<form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;"  method='post'>
+  {% csrf_token %}
     <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
     <div class="col-12">
     
-      <input type="email" class="form-control" placeholder="Source">
+      <input type="text" class="form-control" id="source" placeholder="Source">
     </div>
     <div class="ms-5 ps-5">
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
@@ -47,18 +48,19 @@
             </svg>
     </div>
     <div class=" col-12">
-      <input type="password" class="form-control" placeholder="Destination">
+      <input type="text" class="form-control" id="destination" placeholder="Destination">
     <div>
       <div class="col-12 pt-5">      
-      <input type="date" class="form-control" id="inputAddress" placeholder="">
+      <input type="date" class="form-control" id="date" placeholder="">
     </div>
     <div class="col-12 pt-5">
-      <select id="inputState" class="form-select">
+      <select id="class" class="form-select">
         <option selected>All Classes</option>
         <option>Fisrt AC</option>
         <option>Second AC</option>
         <option>Third AC</option>
         <option>Sleeper</option>
+        
       </select>
     </div>
     <div class="mt-4 text-center mb-2">

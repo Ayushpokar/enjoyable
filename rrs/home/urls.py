@@ -9,6 +9,7 @@ urlpatterns = [
 
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name="dashboard"),
+    path('search',views.searchtrains,name="search"),  # search train by source and destination
     path('Train schedules/', views.schedules, name="Train schedules"),
     #path("add_train/",views.add_train,name="Add Train"),
     path("PNR status/",views.pnr_status,name="PNR status"),

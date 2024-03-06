@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available trains</title>
+</head>
+<body>
+        @foreach ($trains as $train)
+        <div class="card mt-3">  
+            <h5 class="card-header">{{$loop->index+1}} - {{$train['name']}} ({{$train['type']}})   </h5> 
+                <div class="card-body">                    
+                    <p class="card-text">Train number: {{$train['number']}}</p>
+                    <p class="card-text">Departure station: {{$train['departure_station']}}</p>
+                </div>
+                <ul class="list-group list-group-flush">    </ul>
+                <a href="/reservation/create?id={{$loop->index}}&name={{$train['name']}}&type={{$train['type']}}&numb={{$}}             
+                <!-- <a href="/admin/addSchedule?id={{$train['id']}}&name={{$train['name']}}&type={{$train['type']}}& -->
+    
+</body>
+</html>

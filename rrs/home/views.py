@@ -1,9 +1,10 @@
+import queue
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import  login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.models import User, Group, Permission, ContentType
+from django.contrib.auth.models import User         
 from .forms import *
 import json
 from .models import *
@@ -48,7 +49,7 @@ def register(request):
                return redirect('/home/register')'''
 
 
-       return  HttpResponse("data added successfully.")
+       return  redirect('http://127.0.0.1:8000/login/')
 
 
 
@@ -203,7 +204,47 @@ def addstation(request):
 
     return render(request, 'station.html', {'form': StationForm})
 
+def searchtrains(request):
+    # get the data from the user
+    if request.method == 'POST':
+        form=searchtrainform(request.POST)
+        if form.is_valid():
+            source=form.cleaned_data['source']
+            destination=form.cleaned_data['destination']
+            date=form.cleaned_data['date']
+            classes=form.cleaned_data['classes']
+            trainlist=train_master.objects.filter(source=source).filter(destination=destination).filter(departure_datetime=date)
+            source=station_master.objects.get(pk=source)
+            destination=station_master.objects.get(pk=destination)
+            print (source.station_name + " to "+ destination.station_name+ " on "+date+"\n")
+            print ("Available Classes are : \n 1. First Class \n  2. Second Class \n 3. Third Class ")
+        
+        else:
+            HttpResponse('Invalid data format.')
+        
+    else:
+        return render(request,"searchedtrains.html")    
+        # trainlist=[]
+        # for t in trains:
+        #      d={}
+        # filter by date
+        
+        # filtered_trains=[]
+        # try:
+        #    selected_date=datetime.strptime(date,"%d/%m/%Y ").date()
+        # except ValueError:
+        #      return HttpResponse("Please Enter Correct Date")
+        # for train in trains:
+        #       if source==train_master.source_station and destination==train_master.dest_station:
+        #            continue
+            #   elif source==train_master.source_station or destination==train_master.dest_station:
+            #        dayobj=train_master.depart_datetime.filter(day=selected_date)
+            #        if dayobj:
+            #            available="Yes"
+            #        else:
+                     
 
+        
 # def addfriend(request):
 #     friend = Friend()
 #     friend.user1 = request.user

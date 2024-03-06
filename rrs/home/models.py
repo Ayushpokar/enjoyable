@@ -6,7 +6,7 @@ from datetime import datetime,date
 class user_master(models.Model):
     firstname=models.CharField("First Name",max_length=50)
     lastname=models.CharField("Last Name", max_length=50,blank=True)
-    username = models.CharField("Username", max_length=50)
+    username = models.CharField("Username", max_length=50,unique=True)
     password = models.CharField("Password",max_length=128)
     dob=models.DateField()
     email = models.EmailField()
