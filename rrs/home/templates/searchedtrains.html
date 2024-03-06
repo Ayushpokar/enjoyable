@@ -6,16 +6,24 @@
     <title>Available trains</title>
 </head>
 <body>
-        @foreach ($trains as $train)
-        <div class="card mt-3">  
-            <h5 class="card-header">{{$loop->index+1}} - {{$train['name']}} ({{$train['type']}})   </h5> 
-                <div class="card-body">                    
-                    <p class="card-text">Train number: {{$train['number']}}</p>
-                    <p class="card-text">Departure station: {{$train['departure_station']}}</p>
-                </div>
-                <ul class="list-group list-group-flush">    </ul>
-                <a href="/reservation/create?id={{$loop->index}}&name={{$train['name']}}&type={{$train['type']}}&numb={{$}}             
-                <!-- <a href="/admin/addSchedule?id={{$train['id']}}&name={{$train['name']}}&type={{$train['type']}}& -->
+       <div>
+        <!-- search_results.html -->
+
+<h2>Search Results</h2>
+
+{% if trains %}
+    <ul>
+        {% for train in trains %}
+            <li>{{ train.name }} - {{ train.source }} to {{ train.destination }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No trains found.</p>
+{% endif %}
+
+
+
+       </div>
     
 </body>
 </html>

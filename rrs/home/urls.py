@@ -9,13 +9,13 @@ urlpatterns = [
 
     path('', views.index, name='index'),
     path('dashboard/', views.dashboard, name="dashboard"),
-    path('search',views.searchtrains,name="search"),  # search train by source and destination
+    path('searchtrain',views.searchtrain,name="searchtrain"),
     path('Train schedules/', views.schedules, name="Train schedules"),
-    #path("add_train/",views.add_train,name="Add Train"),
+   
     path("PNR status/",views.pnr_status,name="PNR status"),
     path("cancel ticket/",views.cancel_ticket,name="cancel ticket"),
     path("feedback/",views.feedback,name="feedback"),
-    
+    path("about us/",views.about,name='about us'),
     # for admin purpose 
     path("addtrains/",views.addtrains,name= "add trains"),
     path("addstation/",views.addstation,name="add station"),

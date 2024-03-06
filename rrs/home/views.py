@@ -2,6 +2,7 @@ import queue
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import  login_required
+from django.forms import DateTimeField
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User         
@@ -92,18 +93,8 @@ def dashboard(request):
     print(username +' is logged in ')
     return render(request, 'dashboard.html', {'username' : username},context)
 
-
-
-
-
-
-
-
-
-
 def about(request):
-    return HttpResponse('this is about page and store all information about project.')
-
+    return render(request,"srchtrn.html")
 
 def contact(request):
     return HttpResponse('this is for contact information of our admin. ')
@@ -204,174 +195,42 @@ def addstation(request):
 
     return render(request, 'station.html', {'form': StationForm})
 
-def searchtrains(request):
+def searchtrain(request):
     # get the data from the user
     if request.method == 'POST':
-        form=searchtrainform(request.POST)
-        if form.is_valid():
-            source=form.cleaned_data['source']
-            destination=form.cleaned_data['destination']
-            date=form.cleaned_data['date']
-            classes=form.cleaned_data['classes']
-            trainlist=train_master.objects.filter(source=source).filter(destination=destination).filter(departure_datetime=date)
-            source=station_master.objects.get(pk=source)
-            destination=station_master.objects.get(pk=destination)
-            print (source.station_name + " to "+ destination.station_name+ " on "+date+"\n")
-            print ("Available Classes are : \n 1. First Class \n  2. Second Class \n 3. Third Class ")
+        source=request.POST.get('source')
+        destination=request.POST.get('destination')
+        date=request.POST.get('date')
+        classes = request.POST.get('class')
         
-        else:
-            HttpResponse('Invalid data format.')
-        
-    else:
-        return render(request,"searchedtrains.html")    
-        # trainlist=[]
-        # for t in trains:
-        #      d={}
-        # filter by date
-        
-        # filtered_trains=[]
-        # try:
-        #    selected_date=datetime.strptime(date,"%d/%m/%Y ").date()
-        # except ValueError:
-        #      return HttpResponse("Please Enter Correct Date")
-        # for train in trains:
-        #       if source==train_master.source_station and destination==train_master.dest_station:
-        #            continue
-            #   elif source==train_master.source_station or destination==train_master.dest_station:
-            #        dayobj=train_master.depart_datetime.filter(day=selected_date)
-            #        if dayobj:
-            #            available="Yes"
-            #        else:
-                     
-
-        
-# def addfriend(request):
-#     friend = Friend()
-#     friend.user1 = request.user
-#     friend.user2 = User.objects.get(id=int(request.GET['add']))
-#     friend.status = "Pending"
-#     friend.save()
-
-'''@api_view(['POST','GET'])
-def passenger_views(request,format=None):
-    if request.method == 'POST': #for creating a new passenger
-        serializer = PassMasterSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=201)
-        else:
-            return Response(serializer.errors,status=400)
-    elif request.method=='GET':   #for getting all passengers or details of a particular passenger
-        if 'pk' in request.query_params:
-            pk = int(request.query_params['pk'][0])
-            try:
-                passenger = passenger_master.objects.get(pass_id=pk)
-                serializer = PassMasterSerializer(passenger)
-                return Response(serializer.data)
-            except passenger_master.DoesNotExist:
-                return HttpResponse(status=404)
-        else:
-            passengers = passenger_master.objects.all()
-            serializer = PassMasterSerializer(passengers,many=True)
-            return Response(serializer.data)
-'''            
-'''
-@csrf_exempt
-@api_view(['PUT','PATCH'])
-def update_passenger(request,pk):
-    try:
-        passenger = passenger_master.objects.get(pass_id=pk)
-    except passenger_master.DoesNotExist:
-        return HttpResponse(status=404)
-        
-    if request.method == 'PATCH':  #partial update
-        serializer = PassMasterSerializer(passenger,data=request.data, partial=True)
-    else:                           #full update
-        serializer = PassMasterSerializer(passenger,data=request.data)
-        
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    else:
-        return Response(serializer.errors, status=400)    
-
-#this function is used to delete the record from database
-@api_view(['DELETE'])
-def delete_passenger(request,pk):
-    try:
-        passenger = passenger_master.objects.get(pass_id=pk)
-        passenger.delete()
-        return HttpResponse(status=204)
-    except passenger_master.DoesNotExist:
-        return HttpResponse(status=404)    
-'''
-# this function is for add trains
-'''
-def addtrains(request): 
-    context={}
-    if request.POST:  
-        form=trainForm(request.POST)            
-        if form.is_valid():             
-            trainname=form.cleaned_data['trainName']
-            source=form.cleaned_data['sourceStation']
-            destination=form.cleaned_data['destinationStation']
-            dep_time=form.cleaned_data['departureTime']
-            arr_time=form.cleaned_data['arrivalTime']
-            coach_type=form.cleaned_data['coachType']
-            available_seats=form.cleaned_data['availableSeats']
-            t=Train([trainname,source,destination,dep_time,arr_time,coach_type])
-            t.save()
-            c=Coaches(t,coach_type,[i for i in range(1,available_seats+1)])
-            c.save()
-            return redirect('addtrains')
-        else:                            
-            context["error"]="Error! Please check your entries."         
-    else:            
-        form=AddTrainForm()     
-    context["form"]=form            
-    return render(request,'addtrains.html',context)        
-
-def viewtrains(request):
-    trains=Train.objects.all().order_by("-trainId")
-    return render(request,"viewtrains.html",{"trains":trains})
-
-def deletetrain(request,tid):
-    try:
-        t=Train.objects.get(trainId=tid)
-        Train.removeTrain(t)
-        return redirect('/viewtrains/') 
-    except Train.DoesNotExist:              
-       return HttpResponse(status=404)                              
-     
-#-------------------------------------------------------------------------------    
-from django.shortcuts import get_object_or_404  
-from .models import Booking,Train,UserProfile,PaymentDetails
-import datetime
-from django.http import JsonResponse
-@login_required
-def booknow(request):
-    tid = request.GET.get('id','')
-    #print(tid)
-    if not tid :
-        return HttpResponseRedirect("/bookings/")
-    train = get_object_or_404(Train,pk=tid)
-    users=UserProfile.objects.filter(user=request.user).first()
-    if 'passenger' in request.POST:
-        passenger=request.POST['passenger'] 
-        if passengers.isdigit():
-            nofpassengers=int(passengers)                       
-            request.session['nofpassengers']=nofpassengers                        
-            return JsonResponse({"message":"    Passengers added Successfully!"},safe=False)    
-        else:   
-            return JsonResponse({"errormsg":"Invalid number of Passengers"},safe=False)                            
-    elif "submit" in request.POST:                           
         try:
-            nofpassengers=request.session['nofpassengers']             
-            b=Booking(user=users,train=train,numberOfPassengers =nofpassengers,dateTime=datetime.datetime.strptime(request.POST['
-            b=Booking(user=users,train=train,numberOfPassengers=nofpassengers,dateOfJourney=datetime.datetime.strptime(request
+            train = train_master.objects.filter(src_station=source).filter(dest_station=destination)
+            trns=[]
+            
+            for t in train:
+                d1 = datetime.strptime(date, '%d/%m/%Y')
+                d2 = DateTimeField.datetimefield.DateTimeField().to_python(t.timings)
+                diff = d1 - d2
+                days = diff.days + (diff.seconds / (60*60*24))
+                
+                trns.append({'train_no':t.train_number ,  
+                               'source':'Source:'+ str(t.src_station),  
+                               'destination':'Destination:'+ str(t.dest_station),  
+                               'departure time':'Departure Time:'+ str(t.timings)})
+          
+            return HttpResponse(json.dumps(trns), content_type='application/json')
+        except Exception as e:
+            print("Error: ",e) 
+            return render(request,'searchedtrains.html') 
 
+            # You can do further processing with the 'trains' queryset
 
-'''
-       
+            # For example, you might want to pass the results to a template
+            # return render(request, 'searched_train.html', {'trains': trains})
+    else:
+        # If it's a GET request, create an empty form
+      print("else condn chal rhi hai")
 
-    
+    return render(request, 'srchtrn.html' )
+
+        
