@@ -8,9 +8,9 @@ urlpatterns = [
     path('logout/', views.logout_view, name="logout"),
 
     path('', views.index, name='index'),
-      path('home', views.index, name='home'),
+    path('home', views.index, name='home'),
     path('dashboard/', views.dashboard, name="dashboard"),
-    path('searchtrain',views.searchtrain,name="searchtrain"),
+    path('search',views.searchtrain,name="search"),
     path('Train schedules/', views.schedules, name="Train schedules"),
    
     path("PNR status/",views.pnr_status,name="PNR status"),
