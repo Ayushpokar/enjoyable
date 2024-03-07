@@ -203,7 +203,7 @@ def searchtrain(request):
         date=request.POST.get('date')
         classes = request.POST.get('class')
         
-        train = train_master.objects.filter(src_station=source).filter(dest_station=destination)
+        train = train_master.objects.filter(source_station=source).filter(dest_station=destination)
         return render(request,'searchedtrains.html',{'trains':train})    
 
             # You can do further processing with the 'trains' queryset
