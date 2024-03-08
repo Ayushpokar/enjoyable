@@ -84,7 +84,7 @@ class  train_master(models.Model):
     dest_station = models.ForeignKey(station_master, on_delete=models.SET_NULL, related_name='dest_station', null=True, blank=True)
     depart_time = models.TimeField(null=False,blank=False,default=datetime.now().time())
     arrival_time=models.TimeField(null=False,blank=False, default=datetime.now().time())
-    journey_duration=models.DurationField()
+    journey_duration=models.CharField(max_length=20)
     available_seats=models.IntegerField()
     total_seats = models.IntegerField()
     depart_date = models.DateField(null=False,blank=False,default=datetime.today)
