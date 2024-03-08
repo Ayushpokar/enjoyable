@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime,date
+from datetime import datetime,date,time
 
 # Create your model
 
@@ -82,14 +82,16 @@ class  train_master(models.Model):
     train_name = models.CharField(max_length=50, null = False)
     source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE, verbose_name="Source Station")
     dest_station = models.ForeignKey(station_master, on_delete=models.SET_NULL, related_name='dest_station', null=True, blank=True)
-    depart_datetime = models.DateTimeField()
-    arrival_datetime=models.DateTimeField()
+    depart_time = models.TimeField()
+    arrival_time=models.TimeField()
     journey_duration=models.DurationField()
-    available_seats=models.PositiveSmallIntegerField()
-    total_seats = models.PositiveBigIntegerField()
+    available_seats=models.IntegerField()
+    total_seats = models.IntegerField()
+    depart_date = models.DateField()
+    arrival_date=models.DateField(null=False)
     
     def  __str__(self):
-        return  f'{self.train_name}-{self.depart_datetime}'
+        return  f'{self.train_name}-{self.depart_time}'
         
     class Meta:
         db_table =  'train_master'
@@ -162,8 +164,7 @@ class RouteMaster(models.Model):
     distance = models.DecimalField(max_digits=10, decimal_places=2)
     route_name = models.CharField(max_length=255, blank=True, null=True)
     travel_time = models.DurationField(null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
 
     
     def __str__(self):

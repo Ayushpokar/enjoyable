@@ -5,7 +5,7 @@ from .models import *
 class AddTrainForm(forms.ModelForm):
     class Meta:
         model = train_master
-        fields=('train_no','train_name', 'source_station', 'dest_station','depart_datetime','arrival_datetime','journey_duration',
+        fields=('train_no','train_name', 'source_station', 'dest_station','depart_time','arrival_time','journey_duration',
                 'available_seats','total_seats')
 
         '''def clean_departure_time(self):
