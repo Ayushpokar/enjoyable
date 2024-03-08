@@ -50,7 +50,7 @@ def register(request):
                return redirect('/home/register')'''
 
 
-       return  redirect('http://127.0.0.1:8000/login/')
+       return  redirect('/login')
 
 
 
@@ -80,7 +80,7 @@ def handlelogin(request):
 
 def logout_view(request):
         logout(request)
-        return render(request, "login.html")        
+        return redirect('/login')        
 
 
 @login_required(login_url='/login')
@@ -203,8 +203,26 @@ def searchtrain(request):
         date=request.POST.get('date')
         classes = request.POST.get('class')
         
-        train = train_master.objects.filter(source_station=source).filter(dest_station=destination)
-        return render(request,'searchedtrains.html',{'trains':train})    
+        try:
+            train = train_master.objects.filter(src_station=source),
+            train_master.objects.filter(src_station=source)
+            trns=[]
+            
+            for t in train:
+                d1 = datetime.strptime(date, '%d/%m/%Y')
+                d2 = DateTimeField.datetimefield.DateTimeField().to_python(t.timings)
+                diff = d1 - d2
+                days = diff.days + (diff.seconds / (60*60*24))
+                
+                trns.append({'train_no':t.train_number ,  
+                               'source':'Source:'+ str(t.src_station),  
+                               'destination':'Destination:'+ str(t.dest_station),  
+                               'departure time':'Departure Time:'+ str(t.timings)})
+          
+            return HttpResponse(json.dumps(trns), content_type='application/json')
+        except Exception as e:
+            print("Error: ",e) 
+            return render(request,'searchedtrains.html') 
 
             # You can do further processing with the 'trains' queryset
 
@@ -214,6 +232,6 @@ def searchtrain(request):
         # If it's a GET request, create an empty form
       print("else condn chal rhi hai")
 
-    return render(request, 'index.html' )
+    return render(request, 'srchtrn.html' )
 
         
