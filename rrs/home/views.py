@@ -101,7 +101,21 @@ def contact(request):
 
 
 def schedules(request):
-    return HttpResponse('this page is for train schedules.')
+    if request.method == 'POST':
+        date = request.POST['date']
+        time = request.POST['time']
+        duration = int(request.POST['duration'])
+        try:
+            obj=schedule_master()
+            obj.save_schedules(date,time,duration)
+            messages.success(request, "Scheduled Successfully ")
+            return redirect('/schedules')
+        except Exception as e:
+            messages.error(request, str(    e))
+    else:
+        schedulelist = schedule_master.objects.all().order_by("-id")[:10]    
+        context ={'schedulelist':schedulelist}  
+        return render(request,'schedules.html',context)
 
 
 def pnr_status(request):
