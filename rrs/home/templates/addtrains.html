@@ -57,31 +57,37 @@
     {% csrf_token %}
 
     <label for="train_no">Train Number:</label>
-    <input type="text" id="train_no" required>
+    <input type="text" id="train_no" name="train_no">
 
-    <label for="trainName">Train Name:</label>
-    <input type="text" id="trainName" required>
+    <label for="train_name">Train Name:</label>
+    <input type="text" id="train_name" name="train_name">
     
     <label for="source_station"> Source Station: </label>
-    <input type="text" id="source_station" required>
+    <input type="text" id="source_station" name="source_station">
 
     <label for="dest_station">Destination Station:</label>
-    <input type="text" id="dest_station" required>
+    <input type="text" id="dest_station" name="dest_station">
 
-    <label for="depart_datetime">Departure Date & Time:</label>
-    <input type="datetime-local" id="depart_datetime" required>
+    <label for="depart_time">Departure  Time:</label>
+    <input type="time" id="depart_time" name="depart_time">
 
-    <label for="arrival_datetime">Arrival Date & Time:</label>
-    <input type="datetime-local" id="arrival_datetime" required>
+    <label for="arrival_time">Arrival Time:</label>
+    <input type="time" id="arrival_time" name="arrival_time" >
+
+    <label for="depart_date">Departure Date:</label>
+    <input type="date" id="depart_date" name="depart_date" >
+
+    <label for="arrival_date">Arrival Date:</label>
+    <input  type="date" id="arrival_date" name="arrival_date" >
 
     <label for="journey_duration">Journey Duration:</label>
-    <input type="text" id="journey_duration" required>
+    <input type="text" id="journey_duration" name="journey_duration">
 
     <label for="available_seats">Available Seats</label> 
-    <input type="number" id="available_seats" required>
+    <input type="number" id="available_seats" name="available_seats">
 
     <label for="total_seats">Total Seats:</label>
-    <input type="number" id="total_seats" required>
+    <input type="number" id="total_seats" name="total_seats">
     
     <button type="submit" onclick="addTrain()">Add Train</button>
   </form>
@@ -93,18 +99,32 @@
     const train_name = document.getElementById('train_name').value;
     const source_station = document.getElementById('source_station').value;
     const dest_station = document.getElementById('dest_staion').value;
-    const depart_datetime = document.getElementById('depart_datetime').value;
-    const arrival_datetime = document.getElementById('arrival_datetime').value;
+    const depart_time = document.getElementById('depart_time').value;
+    const arrival_time = document.getElementById('arrival_time').value;
+    const depart_date = document.getElementById('depart_date').value;
+    const arrival_date = document.getElementById('arrival_date').value;
     const journey_duration = document.getElementById('journey_duration').value;
     const total_seats = document.getElementById('total_seats').value;
     // Perform validation if needed
+    if (!train_no || !train_name || !source_station || !dest_station ||
+      !depart_time || !arrival_time || !depart_date || !arrival_date ||
+      !journey_duration || !total_seats) {
+    alert('Please fill out all fields.');}
+    return;
 
     // Create a new train object or perform other actions with the data
     const newTrain = {
-      name: trainName,
-      destination: destination,
-      departureTime: departureTime
-    };
+    train_no: train_no,
+    train_name: train_name,
+    source_station: source_station,
+    dest_station: dest_station,
+    depart_time: depart_time,
+    arrival_time: arrival_time,
+    depart_date: depart_date,
+    arrival_date: arrival_date,
+    journey_duration: journey_duration,
+    total_seats: total_seats
+  };
 
     // You can send the data to a server, update the UI, etc.
 
@@ -113,7 +133,8 @@
 
     // You can reset the form if needed
     document.getElementById('trainForm').reset();
-  }
+      }
+
 </script>
 
 </body>

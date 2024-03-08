@@ -9,10 +9,7 @@ from django.contrib.auth.models import User
 from .forms import *
 import json
 from .models import *
-from rest_framework import serializers
-from  rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.views import APIView
+from datetime import datetime
 
 #from django.db import IntegrityError
 
@@ -106,14 +103,14 @@ def schedules(request):
         time = request.POST['time']
         duration = int(request.POST['duration'])
         try:
-            obj=schedule_master()
+            obj=ScheduleMaster()
             obj.save_schedules(date,time,duration)
             messages.success(request, "Scheduled Successfully ")
             return redirect('/schedules')
         except Exception as e:
             messages.error(request, str(    e))
     else:
-        schedulelist = schedule_master.objects.all().order_by("-id")[:10]    
+        schedulelist = ScheduleMaster.objects.all().order_by("-id")[:10]    
         context ={'schedulelist':schedulelist}  
         return render(request,'schedules.html',context)
 
@@ -170,44 +167,48 @@ def feedback(request):
 
 def addtrains(request): 
      if  request.method == 'POST' :
-            form =AddTrainForm(data=request.POST)
-            if form.is_valid():
-               train_no= form.cleaned_data.get('train_no')
-               train_name = form.cleaned_data.get('train_name')
-               source_station = form.cleaned_data.get('source_station')
-               dest_station = form.cleaned_data.get('dest_station')
-               depart_datetime= form.cleaned_data.get('depart_datetime')
-               arrival_datetime= form.cleaned_data.get('arrival_datetime')
-               journey_duration= form.cleaned_data.get('journey_duration')
-               available_seats =  int(form.cleaned_data.get('available_seats'))
-               total_seats=int(form.cleaned_data.get('total_seats'))
-               new_train = train_master(train_no=train_no,train_name=train_name, source_station=source_station, dest_station=dest_station,depart_datetime=depart_datetime,
-                                        arrival_datetime=arrival_datetime,journey_duration=journey_duration,total_seats=total_seats)
-               new_train.save()
-            else:
-                 return  HttpResponse("Invalid Form Data")
-     else:
-          form = AddTrainForm()
-     return render(request,'addtrains.html',{'form':AddTrainForm})
+               train_no= request.POST.get('train_no')
+               train_name = request.POST.get('train_name')
+               src = request.POST.get('source_station')
+               dest = request.POST.get('dest_station')
+               depart_time = datetime.strptime(request.POST.get('depart_time'), '%H:%M').time()
+               arrival_time = datetime.strptime(request.POST.get('arrival_time'), '%H:%M').time()
+               journey_duration= request.POST.get('journey_duration')
+               available_seats =  int(request.POST.get('available_seats'))
+               total_seats=int(request.POST.get('total_seats'))
+               depart_date = datetime.strptime(request.POST.get('depart_date'), '%Y-%m-%d').date()
+               arrival_date = datetime.strptime(request.POST.get('arrival_date'), '%Y-%m-%d').date()
+               try:
+                   source_station=station_master.objects.get(station_name=src)
+                   dest_station=station_master.objects.get(station_name=dest)
 
-# for add stations
+               except station_master.DoesNotExist:
+                   return HttpResponse("Station does not exist")
+                   
+               new_train = train_master(train_no=train_no,train_name=train_name, source_station=source_station, dest_station=dest_station,depart_time=depart_time,
+                                        arrival_time=arrival_time,journey_duration=journey_duration,total_seats=total_seats,arrival_date=arrival_date,depart_date=depart_date)
+               new_train.save()
+               return HttpResponse('Train Added Successfully')
+            
+            
+     else:
+          HttpResponse("Something wrong. Please try again.")
+     return render(request,'addtrains.html')
 
 def addstation(request):
     if request.method == 'POST':
-        form = StationForm(request.POST)
-        if form.is_valid():
-            station_name = form.cleaned_data['station_name']
-            station_code= form.cleaned_data['station_code']
-            location= form.cleaned_data['location']
-            zone= form.cleaned_data['zone']
-            state= form.cleaned_data['state']
+            station_name = request.POST['station_name']
+            station_code= request.POST['station_code']
+            location= request.POST['location']
+            zone= request.POST['zone']
+            state= request.POST['state']
             new_station=station_master(station_name=station_name,station_code=station_code,location=location,zone=zone,state=state)
             new_station.save()
             return HttpResponse('successfully added station.')  # Replace 'success_page' with the URL to redirect after successful form submission
     else:
-        form = StationForm()
+        HttpResponse("something wrong. please try again")
 
-    return render(request, 'station.html', {'form': StationForm})
+    return render(request, 'station.html')
 
 def searchtrain(request):
     # get the data from the user

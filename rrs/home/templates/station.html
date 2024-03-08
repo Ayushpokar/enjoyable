@@ -61,19 +61,19 @@ button {
         <form id="stationForm" action="" method="post">
             {% csrf_token %}
             <label for="station_name">Station Name:</label>
-            <input type="text" id="station_name">
+            <input type="text" id="station_name" name="station_name">
             
             <label for="station_code">Station Code:</label>
-            <input type="text" id="station_code">
+            <input type="text" id="station_code" name="station_code">
             
             <label for="location">Location:</label>
-            <input type="text" id="location" >
+            <input type="text" id="location" name="location">
             
             <label for="zone">Zone:</label>
-            <input type="text" id="zone" >
+            <input type="text" id="zone" name="zone">
             
             <label for="state">State:</label>
-            <input type="text" id="state" >
+            <input type="text" id="state" name="state">
             
             <button type="submit" onclick="validateForm()">Add Station</button>
         </form>

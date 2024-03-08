@@ -82,13 +82,13 @@ class  train_master(models.Model):
     train_name = models.CharField(max_length=50, null = False)
     source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE, verbose_name="Source Station")
     dest_station = models.ForeignKey(station_master, on_delete=models.SET_NULL, related_name='dest_station', null=True, blank=True)
-    depart_time = models.TimeField()
-    arrival_time=models.TimeField()
+    depart_time = models.TimeField(null=False,blank=False,default=datetime.now().time())
+    arrival_time=models.TimeField(null=False,blank=False, default=datetime.now().time())
     journey_duration=models.DurationField()
     available_seats=models.IntegerField()
     total_seats = models.IntegerField()
-    depart_date = models.DateField()
-    arrival_date=models.DateField(null=False)
+    depart_date = models.DateField(null=False,blank=False,default=datetime.today)
+    arrival_date=models.DateField(null=False, blank=False,default=datetime.today)
     
     def  __str__(self):
         return  f'{self.train_name}-{self.depart_time}'
@@ -96,45 +96,7 @@ class  train_master(models.Model):
     class Meta:
         db_table =  'train_master'
 
-    '''@staticmethod
-    def create_new_trains(data):
-        try:
-            new_train = train_mastership(**data)
-            new_train.save()
-            return {"id":new_train.train_no,"message":"New Train Created Successfully!"},201
-        except Exception as e:
-            return{"error":"Error Creating New Train"},400
-
-    @staticmethod
-    def update_train_info(train_no, data):
-        try:
-            with transaction.atomic():
-                queryset = train_mastership.objects.select_for_update().get(train_no=train_no)
-                for key,value in data.items():
-                    setattr(queryset,key,value)
-                queryset.save()
-                return {"message":"Train Information Updated Successfully!"},200
-        except ObjectDoesNotExist:
-            return{"error":"No such train exists."},404
-        except Exception as e:
-            return{"error":str(e)},500
-
-    @staticmethod
-    def get_all_trains():
-        all_trains = [train_mastership_serialize(train).data for train in train_mastership.objects.all()]
-        return {"count":len(all_trans),"results":all_trains}
-
-    @staticmethod
-    def delete_a_train(train_no):
-        try:
-            train = train_mastership.objects.get(train_no=train_no)
-            train.delete()
-            return {"message":"Train Deleted Successfully!"},200
-        except ObjectDoesNotExist:
-            return{"error":"The specified train does not exist."},404
-        except Exception as e:
-            return{"error":str(e)},500  '''
-
+    
 # passenger models
 class passenger_master(models.Model):
     pass_id = models.IntegerField(primary_key=True)
@@ -181,7 +143,6 @@ class routestation(models.Model):
     departure_time = models.DateTimeField()
 
     class Meta:
-        ordering = ['sequence_no']
         db_table="route_stations"
 
 
