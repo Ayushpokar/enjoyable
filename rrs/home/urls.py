@@ -20,6 +20,7 @@ urlpatterns = [
     # for admin purpose 
     path("addtrains/",views.addtrains,name= "add trains"),
     path("addstation/",views.addstation,name="add station"),
+    path("addroutestn/",views.addroutestn,name="add route"),
     
     
     

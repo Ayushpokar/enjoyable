@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Stations Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #routeStationsForm {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px; /* Limiting form width for better readability */
+            width: 100%;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        label {
+            width: 48%; /* Adjust the width based on your design preference */
+            margin-bottom: 8px;
+        }
+
+        input, button {
+            width: 48%; /* Adjust the width based on your design preference */
+            box-sizing: border-box;
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            width: 100%; /* Make the button full-width */
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="routeStationsForm">
+    <h2 style="text-align: center;">Route Stations Form</h2>
+    <form id="routeStationsForm" action="" method="post">
+
+        {% csrf_token %}
+
+        <label for="train_no">Train Number:</label>
+        <select id="train_no" name="train_no">
+            {% for train in train_master %}
+                <option value="{{ train.train_no }}">{{ train.train_no }} - {{ train.train_name }}</option>
+             {% endfor %}
+</select><br>
+        <label for="station_id">Station ID:</label>
+        <select id="station_id" name="station_id">
+            {% for train in trains %}
+                <option value="{{ train.train_no }}">{{ train.train_no }} - {{ train.train_name }}</option>
+            {% endfor %}
+</select><br>
+
+        <label for="sequence_no">Sequence Number:</label>
+        <input type="number" id="sequence_no" name="sequence_no" required>
+
+        <label for="arrival_time">Arrival Time:</label>
+        <input type="time" id="arrival_time" name="arrival_time" required>
+
+        <label for="departure_time">Departure Time:</label>
+        <input type="time" id="departure_time" name="departure_time" required>
+
+        <button type="submit" onclick="validateForm()">Submit</button>
+        <p class="error-message" id="errorMessage"></p>
+    </form>
+</div>
+
+<script>
+    function validateForm() {
+        const sequenceNo = document.getElementById("sequence_no").value;
+        const arrivalTime = document.getElementById("arrival_time").value;
+        const departureTime = document.getElementById("departure_time").value;
+
+        if (sequenceNo === "" || arrivalTime === "" || departureTime === "") {
+            document.getElementById("errorMessage").innerText = "All fields are required.";
+            return false;
+        }
+
+        // Additional validation logic can be added if needed
+
+        // If everything is valid, you can submit the form
+        document.getElementById("routeStationsForm").submit();
+    }
+</script>
+
+</body>
+</html>

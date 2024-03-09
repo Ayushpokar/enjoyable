@@ -85,8 +85,8 @@ class  train_master(models.Model):
     depart_time = models.TimeField(null=False,blank=False,default=datetime.now().time())
     arrival_time=models.TimeField(null=False,blank=False, default=datetime.now().time())
     journey_duration=models.CharField(max_length=20)
-    available_seats=models.IntegerField()
-    total_seats = models.IntegerField()
+    available_seats=models.IntegerField(null=False, blank=False)
+    total_seats = models.IntegerField(null=False, blank=False)
     depart_date = models.DateField(null=False,blank=False,default=datetime.today)
     arrival_date=models.DateField(null=False, blank=False,default=datetime.today)
     
@@ -139,8 +139,8 @@ class routestation(models.Model):
     station_id = models.ForeignKey('station_Master', on_delete=models.PROTECT)
     sequence_no = models.PositiveSmallIntegerField() # Sequence number of the station in a train journey
                                                 # 1 means it is the first station and so on.
-    arrival_time = models.DateTimeField()
-    departure_time = models.DateTimeField()
+    arrival_time = models.TimeField()
+    departure_time = models.TimeField()
 
     class Meta:
         db_table="route_stations"
