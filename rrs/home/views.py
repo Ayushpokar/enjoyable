@@ -64,8 +64,11 @@ def handlelogin(request):
             user = user_master.objects.get(username=username, password=password)
             request.session['userid'] = user.id
             request.session['username'] = user.username
+            user_name={
+                'User':user.username
+            }
             print('User Logged In Successfully!')
-            return render(request, 'dashboard.html')
+            return render(request,'dashboard.html',user_name)
             
 
         except user_master.DoesNotExist:
@@ -80,15 +83,11 @@ def logout_view(request):
         return redirect('/login')        
 
 
-@login_required(login_url='/login')
+# @login_required(login_url='/login')
 def dashboard(request):
     print(request.user) 
     # get the current logged in user details from session and display on dashboard page
-    
-    context={'userdetail':request.user} 
-    username = request.session['username']
-    print(username +' is logged in ')
-    return render(request, 'dashboard.html', {'username' : username},context)
+    return render(request, 'dashboard.html')
 
 def about(request):
     return render(request,"srchtrn.html")
