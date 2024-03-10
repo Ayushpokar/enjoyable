@@ -256,9 +256,20 @@ def searchtrain(request):
         
          # Query trains based on source station and destination station
         print(source,destination)
+        stn_src = station_master.objects.filter(station_id = source)
+        print(stn_src)
+        for station in stn_src:
+            source_names = station.station_name
+        print(source_names) 
+        stn_des = station_master.objects.filter(station_id = destination)
+        print(stn_des)
+        for station in stn_des:
+            des_names = station.station_name
+        print(des_names)
+        
         station = {
-            'src': source,
-            'dest': destination
+            'src': source_names,
+            'dest':des_names
         }
         # parsed_date=None
         # if date is not None and isinstance(depart_date, str):
@@ -268,15 +279,30 @@ def searchtrain(request):
         #         # Handle the case when date is not in the expected format
         #         return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
         filtered_trains=[]
-        filtered_trains = train_master.objects.filter(
-            source_station_id=source,
-            dest_station_id=destination,
+        rdes = routestation.objects.filter(
         
-        ).values
-        print(filtered_trains,"hello")
-         #       filtered_trains.append(train)
+            station_id_id=destination,
+        ).values()
+        #print(rdes)
+        for  i in rdes:
+             t_no=i["train_no_id"]
+             sdes=routestation.objects.filter(train_no_id = t_no,station_id_id=source).values()
+             for  j in sdes:
+                 
 
-        return render(request,"searchedtrains.html",{ "trains": filtered_trains , 'station':station})
+                 if j['sequence_no'] < i['sequence_no'] :
+                      
+                    t_name = train_master.objects.filter(train_no=t_no).values()
+                    for  k in t_name:
+                    
+                         filtered_trains.append(k)
+            
+             #print(t_no,sdes)
+
+        #print(filtered_trains,"hello")
+        #  #       filtered_trains.append(train)
+
+        return render(request,"searchedtrains.html",{ "trains": filtered_trains , "station": station})
        #You can do further processing with the 'trains' queryset
 
             # For example, you might want to pass the results to a template

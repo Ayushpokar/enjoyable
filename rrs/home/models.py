@@ -80,8 +80,8 @@ class  user_feedback(models.Model):
 class  train_master(models.Model):
     train_no  = models.IntegerField(primary_key=True)
     train_name = models.CharField(max_length=50, null = False)
-    source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE,to_field="station_name", verbose_name="Source Station",null=True)
-    dest_station = models.ForeignKey(station_master, on_delete=models.CASCADE, related_name='dest_station',to_field="station_name", null=True)
+    source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE,to_field="station_id", verbose_name="Source Station",null=True)
+    dest_station = models.ForeignKey(station_master, on_delete=models.CASCADE, related_name='dest_station',to_field="station_id", null=True)
     depart_time = models.TimeField(null=False,blank=False,default=datetime.now().time())
     arrival_time=models.TimeField(null=False,blank=False, default=datetime.now().time())
     journey_duration=models.CharField(max_length=20)
