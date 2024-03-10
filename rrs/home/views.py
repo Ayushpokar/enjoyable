@@ -16,7 +16,8 @@ from datetime import datetime
 
 def index(request):
     # return HttpResponse('hello')
-    return render(request, 'index.html', {'title': 'Home'})
+    stn =station_master.objects.all()
+    return render(request, 'index.html', {'title': 'Home', 'stn': stn})
 
 def register(request):
     if request.method == 'POST':
@@ -216,7 +217,7 @@ def addroutestn(request):
         sequence_no = request.POST['sequence_no']
         arrival_time=datetime.strptime(request.POST['arrival_time'], "%H:%M").time()
         departure_time=datetime.strftime(request.POST['departure_time'],"%H:%M").time()
-        # print (type(arrival_time))
+        print (type(arrival_time))
         route=routestation(train_no=train_no,station_id=station_id,sequence_no=sequence_no,arrival_time=arrival_time,departure_time=departure_time)
         route.save()
         
@@ -249,33 +250,34 @@ def addroutestn(request):
 def searchtrain(request):
     # get the data from the user
     if request.method == 'POST':
-        source=request.POST.get('source')
-        destination=request.POST.get('destination')
-        date=request.POST.get('date')
-        classes = request.POST.get('class')
+        source = request.POST.get("source") 
+        destination = request.POST.get("destination")
         
-        try:
-            train = train_master.objects.filter(src_station=source),
-            train_master.objects.filter(src_station=source)
-            trns=[]
-            
-            for t in train:
-                d1 = datetime.strptime(date, '%d/%m/%Y')
-                d2 = DateTimeField.datetimefield.DateTimeField().to_python(t.timings)
-                diff = d1 - d2
-                days = diff.days + (diff.seconds / (60*60*24))
-                
-                trns.append({'train_no':t.train_number ,  
-                               'source':'Source:'+ str(t.src_station),  
-                               'destination':'Destination:'+ str(t.dest_station),  
-                               'departure time':'Departure Time:'+ str(t.timings)})
-          
-            return HttpResponse(json.dumps(trns), content_type='application/json')
-        except Exception as e:
-            print("Error: ",e) 
-            return render(request,'searchedtrains.html') 
+        
+         # Query trains based on source station and destination station
+        print(source,destination)
+        station = {
+            'src': source,
+            'dest': destination
+        }
+        # parsed_date=None
+        # if date is not None and isinstance(depart_date, str):
+        #     try:
+        #         parsed_date = datetime.strptime(depart_date, '%Y-%m-%d').date()
+        #     except ValueError:
+        #         # Handle the case when date is not in the expected format
+        #         return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
+        filtered_trains=[]
+        filtered_trains = train_master.objects.filter(
+            source_station_id=source,
+            dest_station_id=destination,
+        
+        ).values
+        print(filtered_trains,"hello")
+         #       filtered_trains.append(train)
 
-            # You can do further processing with the 'trains' queryset
+        return render(request,"searchedtrains.html",{ "trains": filtered_trains , 'station':station})
+       #You can do further processing with the 'trains' queryset
 
             # For example, you might want to pass the results to a template
             # return render(request, 'searched_train.html', {'trains': trains})

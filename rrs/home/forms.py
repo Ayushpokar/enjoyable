@@ -2,6 +2,12 @@
 from django import forms
 from .models import *
 
+class searchtrainform(forms.Form):
+    source=forms.CharField()
+    destination = forms.CharField()
+    depart_date = forms.DateField() 
+    
+
 class AddTrainForm(forms.ModelForm):
     class Meta:
         model = train_master

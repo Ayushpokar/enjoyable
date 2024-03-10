@@ -31,7 +31,7 @@ class blogs(user_master):
         return f'{self.title} by {self.username}'
 class station_master(models.Model):
     station_id=models.AutoField(primary_key=True)
-    station_name=models.CharField(max_length=30,null=False)
+    station_name=models.CharField(max_length=30,null=False,unique=True)
     station_code=models.CharField(unique=True,max_length=5, null=False)
     location = models.CharField(max_length=50,null=False)
     zone=models.CharField(max_length=30,null=False)
@@ -80,8 +80,8 @@ class  user_feedback(models.Model):
 class  train_master(models.Model):
     train_no  = models.IntegerField(primary_key=True)
     train_name = models.CharField(max_length=50, null = False)
-    source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE, verbose_name="Source Station")
-    dest_station = models.ForeignKey(station_master, on_delete=models.SET_NULL, related_name='dest_station', null=True, blank=True)
+    source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE,to_field="station_name", verbose_name="Source Station",null=True)
+    dest_station = models.ForeignKey(station_master, on_delete=models.CASCADE, related_name='dest_station',to_field="station_name", null=True)
     depart_time = models.TimeField(null=False,blank=False,default=datetime.now().time())
     arrival_time=models.TimeField(null=False,blank=False, default=datetime.now().time())
     journey_duration=models.CharField(max_length=20)
@@ -135,6 +135,7 @@ class RouteMaster(models.Model):
         db_table = "route_master"
 
 class routestation(models.Model):
+    id = models.AutoField(primary_key=True)
     train_no = models.ForeignKey('train_master',on_delete=models.CASCADE)
     station_id = models.ForeignKey('station_Master', on_delete=models.PROTECT)
     sequence_no = models.PositiveSmallIntegerField() # Sequence number of the station in a train journey

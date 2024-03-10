@@ -40,7 +40,12 @@
     <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
     <div class="col-12">
     
-      <input type="text" class="form-control" id="source" placeholder="Source">
+      <label for="source" >Source:</label>
+      <select name="source">
+        {% for station in stn %}
+        <option value="{{station.station_name}}">{{station.station_name}}</option>
+        {% endfor %}
+      </select>
     </div>
     <div class="ms-5 ps-5">
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
@@ -48,7 +53,12 @@
             </svg>
     </div>
     <div class=" col-12">
-      <input type="text" class="form-control" id="destination" placeholder="Destination">
+      <label for="destination">Destination:</label>
+      <select name="destination">
+        {% for station in stn %}
+        <option value="{{station.station_name}}">{{station.station_name}}</option>
+        {% endfor %}
+      </select>
     <div>
       <div class="col-12 pt-5">      
       <input type="date" class="form-control" id="date" placeholder="">

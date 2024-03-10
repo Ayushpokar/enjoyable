@@ -12,7 +12,7 @@
           <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
           <div class="col-12">
           
-            <input type="text" class="form-control" id="source" placeholder="Source">
+            <input type="text" class="form-control" id="source" name="source" placeholder="Source">
           </div>
           <div class="ms-5 ps-5">
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
@@ -20,13 +20,13 @@
                   </svg>
           </div>
           <div class=" col-12">
-            <input type="text" class="form-control" id="destination" placeholder="Destination">
+            <input type="text" class="form-control" id="destination" name="destination" placeholder="Destination">
           <div>
             <div class="col-12 pt-5">      
-            <input type="date" class="form-control" id="date" placeholder="">
+            <input type="date" class="form-control" id="depart_date" name="depart_date">
           </div>
           <div class="col-12 pt-5">
-            <select id="class" class="form-select">
+            <select id="class" name="class class="form-select">
               <option selected>All Classes</option>
               <option>Fisrt AC</option>
               <option>Second AC</option>
@@ -46,10 +46,10 @@
         function search(){
           source = document.getElementById("source").value;
           destination=document.getElementById("destination").value;
-          date=document.getElementById("date").value;
+          depart_date=document.getElementById("depart_date").value;
           cls=document.getElementById("class").value;
           if(source!="" & destination!="" & date!="")
-            window.location.href="/search?src="+source+"&dest="+destination+"&d="+date+"&cls="+cls; 
+            window.location.href="/search?src="+source+"&dest="+destination+"&d="+depart_date+"&cls="+cls; 
           else
             alert("Please fill all the fields");  
             /* var xhttp = new XMLHttpRequest();
