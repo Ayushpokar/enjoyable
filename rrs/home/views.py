@@ -10,6 +10,7 @@ from .forms import *
 import json
 from .models import *
 from datetime import datetime
+from django.contrib.auth.hashers import make_password ,check_password
 
 #from django.db import IntegrityError
 
@@ -24,6 +25,7 @@ def register(request):
 
        username = request.POST.get('username')
        password = request.POST.get('password')
+       hashed_password =  make_password(password)
        firstname = request.POST.get('firstname')
        lastname = request.POST.get('lastname')
        dob = request.POST.get('dob')
@@ -33,7 +35,7 @@ def register(request):
        # for save the information of user 
 
        myuser = user_master(firstname=firstname, lastname=lastname, username=username,
-                             password=password, dob=dob, email=email, mobile=mobile, address=address)
+                             password=hashed_password, dob=dob, email=email, mobile=mobile, address=address)
        myuser.save()
 
        
@@ -60,16 +62,30 @@ def handlelogin(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
+        hash_password = make_password(password)
+        print(username,password)
+
         
         try:
-            user = user_master.objects.get(username=username, password=password)
-            request.session['userid'] = user.id
-            request.session['username'] = user.username
-            user_name={
+            # passd=check_password(password)
+            # user = user_master.objects.get(username=username, password=passd)
+            # request.session['userid'] = user.id
+            # request.session['username'] = user.username
+
+            user = authenticate(username=username, password=hash_password)
+
+            print(user)
+            if user is not None:
+                login(request, user)
+                request.session['userid'] = user.id
+                request.session['username'] = user.username
+                user_name={
                 'User':user.username
-            }
-            print('User Logged In Successfully!')
-            return render(request,'dashboard.html',user_name)
+                }
+                print('User Logged In Successfully!')
+                return render(request,'dashboard.html',user_name)
+            else:
+                return HttpResponse( "Invalid Login")
             
 
         except user_master.DoesNotExist:
@@ -84,9 +100,15 @@ def logout_view(request):
         return redirect('/login')        
 
 
-# @login_required(login_url='/login')
+@login_required(login_url='/login')
 def dashboard(request):
-    print(request.user) 
+    print(request.user)
+    # Get the logged in users id from session and get all data related to that user
+    userna=request.session.get('username')
+    user_name = {
+        'User' : userna
+        
+    }
     # get the current logged in user details from session and display on dashboard page
     return render(request, 'dashboard.html')
 

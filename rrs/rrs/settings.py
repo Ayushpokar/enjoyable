@@ -87,6 +87,9 @@ DATABASES = {
     }
 }
 
+# authentication_backends.py
+
+AUTHENTICATION_BACKENDS = ['home.authentication_backends.CustomBackend']
 
 
 # Password validation
