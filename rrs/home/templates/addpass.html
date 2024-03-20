@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Passenger Information</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Passenger Information</h2>
+    <label>Number of passengers:</label>
+    <input type="number"  id="passen" name="passen" min="1" max="5" required><br>
+    <button onclick="myFunction()">Submit</button><br>
+    <form id="passengerForm" >
+        {% csrf_token %}
+        <div id="passengerDetails"></div>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<script>
+    function myFunction() {
+    const passengerForm = document.getElementById('passengerForm');
+    const passengerDetailsContainer = document.getElementById('passengerDetails');
+
+    // Number of passengers
+    const numberOfPassengers = document.getElementById("passen").value;
+
+    // Loop to generate input fields for each passenger
+    for (let i = 1; i <= numberOfPassengers; i++) {
+        const passengerDetails = document.createElement('div');
+        passengerDetails.className = 'form-group';
+        passengerDetails.innerHTML = `
+            <label>Passenger${i}</label>
+            <label for="name${i}">Name:</label>
+            <input type="text" id="name${i}" name="name${i}" required>
+            <label for="age${i}">Age:</label>
+            <input type="number" id="age${i}" name="age${i}" required>
+        `;
+        passengerDetailsContainer.appendChild(passengerDetails);
+    }
+}
+
+// Submit the form data to Django view
+document.querySelector('#passengerForm').addEventListener('submit', function(event) { 
+    event.preventDefault();
+    
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'book', true    );  
+    xhr.onload = function () {
+      if (xhr.status ===  200) {
+          alert('Success! Passenger added.')
+      } else {
+          alert(`Error: ${xhr.status}`);
+      }
+    };
+    let formData = new FormData(event.target);
+    xhr.send(formData); 
+});
+</script>
+
+</body>
+</html>

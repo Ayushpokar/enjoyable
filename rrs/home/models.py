@@ -70,6 +70,7 @@ class  user_feedback(models.Model):
     username=models.CharField(max_length=30)
     subject=models.CharField(max_length=100)
     message=models.TextField()
+    email = models.EmailField()
 
     def  __str__(self):
         return self.username + "-"+self.subject

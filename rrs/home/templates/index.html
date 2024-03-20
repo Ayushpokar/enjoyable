@@ -47,12 +47,12 @@
         {% endfor %}
       </select>
     </div>
-    <div class="ms-5 ps-5">
+    <!-- <div class="ms-5 ps-5">
              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
             </svg>
-    </div>
-    <div class=" col-12">
+    </div> -->
+    <div class="col-12 pt-3">
       <label for="destination">Destination:</label>
       <select name="destination" class="form-control ">
         {% for station in stn %}
@@ -60,20 +60,16 @@
         {% endfor %}
       </select>
     <div>
-      <div class="col-12 pt-5">      
+      <div class="col-12 pt-3">      
+      <label> Departure date :</label> 
       <input type="date" class="form-control" name="depart_date" placeholder="">
     </div>
-    <div class="col-12 pt-5">
-      <select id="class" name="class" class="form-select">
-        <option selected>All Classes</option>
-        <option>Fisrt AC</option>
-        <option>Second AC</option>
-        <option>Third AC</option>
-        <option>Sleeper</option>
-        
-      </select>
+    <div class="col-12 pt-3">
+      <label> Number of Passengers: </label>
+      <input type="number" class="form-control" name="no_of_passengers" min=1 max=5 placeholder="Number of Passengers">
+    
     </div>
-    <div class="mt-4 text-center mb-2">
+      <div class="mt-4 text-center mb-2">
       <button type="submit" class="btn btn-primary" onclick="search()">Search</button>
     </div>
 

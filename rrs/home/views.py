@@ -69,7 +69,7 @@ def handlelogin(request):
             # passd=check_password(hash_password)
             # print(passd)
             user = user_master.objects.get(username=username, password=password)
-            request.session['userid'] = user.id
+            login(request,user)
             request.session['username'] = user.username
 
             # user = authenticate(username=username, password=hash_password)
@@ -83,7 +83,7 @@ def handlelogin(request):
              'User':user.username
             }
             print('User Logged In Successfully!')
-            return render(request,'dashboard.html',user_name)
+            return redirect('/dashboard')
             # else:
             #     return HttpResponse( "Invalid Login")
             
@@ -100,7 +100,7 @@ def logout_view(request):
         return redirect('/login')        
 
 
-#@login_required(login_url='/login')
+@login_required(login_url='/login')
 def dashboard(request):
     stn =station_master.objects.all()
     
@@ -286,7 +286,7 @@ def searchtrain(request):
         source = request.POST.get("source") 
         destination = request.POST.get("destination")
         depart_date= request.POST.get("depart_date")
-        clas= request.POST.get("class")
+        nop= request.POST.get("no_of_passenger")
         
         
          # Query trains based on source station and destination station
@@ -334,9 +334,11 @@ def searchtrain(request):
                          filtered_trains.append(k)
             
              #print(t_no,sdes)
-
-        #print(filtered_trains,"hello")
-        #  #       filtered_trains.append(train)
+        # request.session["src"]=source
+        # request.session["dest"] = destination
+        # request.session["depart_date"]= depart_date
+        # request.session["filtered_trains"]=filtered_trains
+        request.session["nop"]=nop
 
         return render(request,"searchedtrains.html",{ "trains": filtered_trains , "station": station})
        #You can do further processing with the 'trains' queryset
@@ -349,7 +351,16 @@ def searchtrain(request):
 
     return render(request, 'srchtrn.html' )
 
+def  booking(request):
 
+    if request.method=="POST" :
+         passen=request.POST.get("passengerDetails")
+         print(passen)
+        
+
+    return render(request, 'addpass.html')
+    
+    
     
              
 
