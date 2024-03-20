@@ -113,10 +113,10 @@ class class_master(models.Model):
     description= models.TextField(max_length=100)
     features = models.TextField(max_length=100)
     capacity = models.IntegerField()
-    price = models.FloatField()
+    fare = models.FloatField()
     class Meta:
         db_table = "class_master"
-
+        # for calculating fare
 
 
 class RouteMaster(models.Model):
@@ -179,4 +179,28 @@ class ScheduleMaster(models.Model):
     def __str__(self):
         #return f"Schedule {self.schedule_id}: {self.train.name} - {self.start_date}-{self.end_date}, Week:{self.week
         return f"Schedule {self.schedule_id}: {self.train.train_name} - {self.start_date}"
+
+class ticket_master(models.Model):
+    PNR_NO=models.IntegerField(primary_key=True)
+    train_no=models.ForeignKey("train_master", on_delete=models.CASCADE, related_name='tickets')
+    pass_id=models.ForeignKey("passenger_master",on_delete=models.CASCADE)
+    depart_station=models.ForeignKey("station_master", on_delete=models.CASCADE,related_name='depart_ticket')
+    arrival_station=models.ForeignKey("station_master", on_delete=models.CASCADE, related_name='arrival_ticket')
+    class_id = models.ForeignKey("class_master",on_delete=models.CASCADE,related_name= 'ticket_classes') 
+    coach_typ = models.CharField(max_length=20)
+    seat_number = models.IntegerField()   ## Can be a single number or range of numbers like 1-10  etc.
+    fare = models.DecimalField(decimal_places=2, max_digits=8)
+    booking_status = [
+                 ('R','Reserved'),
+                 ('A','Allocated'),
+                 ('P','Paid'),
+                 ('N','Not Paid'),
+                ]
+    
+    booking_state = models.CharField(max_length=1,choices=booking_status)
+    reservation_time = models.DateTimeField(auto_now_add=True)  
+
+    class Meta:
+       unique_together = (('PNR_NO', 'train_no'), )
+
 

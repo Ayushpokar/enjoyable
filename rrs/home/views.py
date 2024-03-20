@@ -25,7 +25,6 @@ def register(request):
 
        username = request.POST.get('username')
        password = request.POST.get('password')
-       hashed_password =  make_password(password)
        firstname = request.POST.get('firstname')
        lastname = request.POST.get('lastname')
        dob = request.POST.get('dob')
@@ -35,7 +34,7 @@ def register(request):
        # for save the information of user 
 
        myuser = user_master(firstname=firstname, lastname=lastname, username=username,
-                             password=hashed_password, dob=dob, email=email, mobile=mobile, address=address)
+                             password=password, dob=dob, email=email, mobile=mobile, address=address)
        myuser.save()
 
        
@@ -69,7 +68,7 @@ def handlelogin(request):
         try:
             # passd=check_password(hash_password)
             # print(passd)
-            user = user_master.objects.get(username=username, password=hash_password)
+            user = user_master.objects.get(username=username, password=password)
             request.session['userid'] = user.id
             request.session['username'] = user.username
 
@@ -101,17 +100,20 @@ def logout_view(request):
         return redirect('/login')        
 
 
-@login_required(login_url='/login')
+#@login_required(login_url='/login')
 def dashboard(request):
+    stn =station_master.objects.all()
+    
+
     print(request.user)
     # Get the logged in users id from session and get all data related to that user
-    userna=request.session.get('username')
-    user_name = {
-        'User' : userna
+    user_name=request.session.get('username')
+    user_nam = {
+        'User' : user_name
         
     }
     # get the current logged in user details from session and display on dashboard page
-    return render(request, 'dashboard.html')
+    return render(request, 'dashboard.html',{ 'stn': stn})
 
 def about(request):
     return render(request,"srchtrn.html")
@@ -283,6 +285,8 @@ def searchtrain(request):
     if request.method == 'POST':
         source = request.POST.get("source") 
         destination = request.POST.get("destination")
+        depart_date= request.POST.get("depart_date")
+        clas= request.POST.get("class")
         
         
          # Query trains based on source station and destination station
@@ -300,15 +304,16 @@ def searchtrain(request):
         
         station = {
             'src': source_names,
-            'dest':des_names
+            'dest':des_names,
+            
         }
-        # parsed_date=None
-        # if date is not None and isinstance(depart_date, str):
-        #     try:
-        #         parsed_date = datetime.strptime(depart_date, '%Y-%m-%d').date()
-        #     except ValueError:
-        #         # Handle the case when date is not in the expected format
-        #         return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
+        # query based on depart_date
+        try:
+                parsed_date = datetime.strptime(depart_date, '%Y-%m-%d').date()
+        except ValueError:
+                # Handle the case when date is not in the expected format
+                return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
+        print(parsed_date)
         filtered_trains=[]
         rdes = routestation.objects.filter(
         
@@ -323,7 +328,7 @@ def searchtrain(request):
 
                  if j['sequence_no'] < i['sequence_no'] :
                       
-                    t_name = train_master.objects.filter(train_no=t_no).values()
+                    t_name = train_master.objects.filter(train_no=t_no,depart_date=parsed_date).values()
                     for  k in t_name:
                     
                          filtered_trains.append(k)
@@ -343,5 +348,10 @@ def searchtrain(request):
       print("else condn chal rhi hai")
 
     return render(request, 'srchtrn.html' )
+
+
+    def ticket(request):
+        if method  == 'POST':
+             
 
         

@@ -3,10 +3,72 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
+        <title>Available trains</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+      	<style>
+          body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-image: url('/static/train\ bg.jpg'); background-repeat: no-repeat;
+          
+        }
+        
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 20px;
+        }
+        
+        h1 {
+          text-align: center;
+          margin-bottom: 30px;
+        }
+        
+        .filters {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 20px;
+        }
+        
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        
+        th,
+        td {
+          padding: 10px;
+          border: 1px solid #ddd;
+          text-align: left;
+        }
+        
+        th {
+          background-color: #f2f2f2;
+          font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
+        }
+        
+        button {
+          background-color: #4CAF50;
+          color: white;
+          padding: 10px 20px;
+          border: none;
+          cursor: pointer;
+        }
+        
+        button:hover {
+          background-color: #45a049;
+        }
+        .tr{
+
+        }
+        </style>
       </head>
-      <body style="background-image: url('train\ bg.jpg'); background-repeat: no-repeat;" class="bg-primary-subtle">
+      <body class="bg-primary-subtle">
     
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
       
@@ -34,46 +96,60 @@
               </div>
             </div>
           </header>
-<h2 class="text-success"> Result</h2>
+<h2 class="text-success"> Searched trains</h2>
+<!-- <div class="filters">
+  <label for="from-station">From Station:</label>
+  <input type="text" id="from-station" value="AGRA CANTT - AGC (AGRA)">
+  <label for="to-station">To Station:</label>
+  <input type="text" id="to-station" value="UDAIPUR CITY - UDZ (UDAIPUR CITY)">
+  <label for="date">Date:</label>
+  <input type="date" id="date" value="11/03/2024">
+  <label for="quota">Quota:</label>
+  <select id="quota">
+    <option value="general">General</option>
+  </select>
+  <button id="search">Search</button>
+</div> -->
+<form action="" method="post"
+<table class="table table-striped table-responsive " style="width: 100%">  
+  <thead >  
+      <tr align="left"> 
 
-{% if trains %}
-    <ul>
-        {% for train in trains %}
-            <li> {{ train.train_name }} - {{ station.src }} to {{ station.dest }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p class="text-danger fs-5">No trains found.</p>
-{% endif %} 
+        <th scope="col">Train Number</th>  
+        <th scope="col">Name of Train</th>
+        <th scope="col">Source Station</th>  
+        <th scope="col">  Destination Station</th>    
+        <th scope="col">Departure  date&Time</th>   
+        <th scope="col">Arrival  date&Time</th> 
+        <th scope="col">Available Quota</th>
+        <th scope="col">Fare</th>
+      </tr>
+  </thead>
+  {% if trains %}
+      {% for train  in trains %}
+  <thead>
+      <tr class="tr">
+        
+          <td > {{ train.train_no }}</td>
+          <td >{{ train.train_name }}</td>
+          <td >{{ station.src }}</td>
+          <td >{{ station.dest }}</td> 
+          <td> {{ train.depart_date }}  {{ train.depart_time }}</td>
+          <td> {{ train.arrival_date }} {{ train.arrival_time }}</td>
+          <td> </td>
+          <td></td>
+          <td><button id="button">BOOK</button></td>
+
+        
+      </tr>
+      {% endfor %}
+  </thead>
+  {% else %}
+       No Trains Available For The Given Details!
+  {% endif %}
 
 
 
-       </div>
-       
-    <div class="border bg-info mx-4   fs-5 fw-semibold " style="display:inline-flex; width: 85%">
-        <div class="mx-5 ">
-           sr.no
-           </div>
-        <div class="mx-5">
-         train no 
-        </div>
-        <div class="px-5">
-         train name
-        </div>
-        <div class="px-5">
-         station source 
-        </div>
-        <div >
-            --->
-        </div>
-        <div class="px-5">
-         station Destination
-        </div>
-        <div >
-            <button class="btn btn-success">Book Ticket</button>
-        </div>
-     </div>
- </body>
-    
+ 
 </body>
 </html>
