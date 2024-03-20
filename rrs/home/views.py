@@ -350,8 +350,7 @@ def searchtrain(request):
     return render(request, 'srchtrn.html' )
 
 
-    def ticket(request):
-        if method  == 'POST':
+    
              
 
         
