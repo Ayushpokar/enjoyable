@@ -43,25 +43,21 @@
     </div>
   </header>
 
-  <form action="" style="background-color: rgb(153, 218, 112);width: 500px;margin: auto;margin-top: 2cm;" class="text-center  form-control">
+  <form action="" method="post" style="background-color: rgb(153, 218, 112);width: 500px;margin: auto;margin-top: 2cm;" class="text-center  form-control">
+    {% csrf_token %}
     <h3>Define Your Journey</h3>
     <div>
-      <label for="train" class="form-label">Train number</label>
-      <input type="text" class="form-control">
+      <label for="train" class="form-label">Enter your email</label>
+      <input type="email"  value="" class="form-control" name="email">
     </div>
     <div>
-    <label for="" class="form-label">Rate your journey</label>
-    <select name="rating" id="" class="form-control">
-    <option value="" selected>Rate</option>
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    </select>
+      <label for="comment" class="form-label">Subject of Feedback</label>
+      <input type="text" class="form-control" name="subject">
     </div>
-    <label for="comment" class="form-label">Comment your journey</label>
-    <input type="text" class="form-control">
+    <div>
+      <label for="comment" class="form-label">Description of Feedback</label>
+      <input type="text" class="form-control" name="descrip">
+    </div>
     <div class="text-center mt-2 pb-2 ">
         <button class="btn btn-primary ">Send Feedback</button>
       </div>

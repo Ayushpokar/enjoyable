@@ -41,7 +41,7 @@
     <div class="col-12">
     
       <label for="source" >Source:</label>
-      <select name="source">
+      <select name="source" class="form-control">
         {% for station in stn %}
         <option value="{{station.station_id}}">{{station.station_name}}</option>
         {% endfor %}
@@ -54,7 +54,7 @@
     </div>
     <div class=" col-12">
       <label for="destination">Destination:</label>
-      <select name="destination">
+      <select name="destination" class="form-control ">
         {% for station in stn %}
         <option value="{{station.station_id}}">{{station.station_name}}</option>
         {% endfor %}

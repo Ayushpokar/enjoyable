@@ -67,25 +67,26 @@ def handlelogin(request):
 
         
         try:
-            # passd=check_password(password)
-            # user = user_master.objects.get(username=username, password=passd)
-            # request.session['userid'] = user.id
-            # request.session['username'] = user.username
+            # passd=check_password(hash_password)
+            # print(passd)
+            user = user_master.objects.get(username=username, password=hash_password)
+            request.session['userid'] = user.id
+            request.session['username'] = user.username
 
-            user = authenticate(username=username, password=hash_password)
+            # user = authenticate(username=username, password=hash_password)
 
-            print(user)
-            if user is not None:
-                login(request, user)
-                request.session['userid'] = user.id
-                request.session['username'] = user.username
-                user_name={
-                'User':user.username
-                }
-                print('User Logged In Successfully!')
-                return render(request,'dashboard.html',user_name)
-            else:
-                return HttpResponse( "Invalid Login")
+            # print(user)
+            # if user is not None:
+            #     login(request, user)
+            #     request.session['userid'] = user.id
+            #     request.session['username'] = user.username
+            user_name={
+             'User':user.username
+            }
+            print('User Logged In Successfully!')
+            return render(request,'dashboard.html',user_name)
+            # else:
+            #     return HttpResponse( "Invalid Login")
             
 
         except user_master.DoesNotExist:
@@ -120,21 +121,21 @@ def contact(request):
 
 
 def schedules(request):
-    if request.method == 'POST':
-        date = request.POST['date']
-        time = request.POST['time']
-        duration = int(request.POST['duration'])
-        try:
-            obj=ScheduleMaster()
-            obj.save_schedules(date,time,duration)
-            messages.success(request, "Scheduled Successfully ")
-            return redirect('/schedules')
-        except Exception as e:
-            messages.error(request, str(    e))
-    else:
-        schedulelist = ScheduleMaster.objects.all().order_by("-id")[:10]    
-        context ={'schedulelist':schedulelist}  
-        return render(request,'schedules.html',context)
+    # if request.method == 'POST':
+    #     date = request.POST['date']
+    #     time = request.POST['time']
+    #     duration = int(request.POST['duration'])
+    #     try:
+    #         obj=ScheduleMaster()
+    #         obj.save_schedules(date,time,duration)
+    #         messages.success(request, "Scheduled Successfully ")
+    #         return redirect('/schedules')
+    #     except Exception as e:
+    #         messages.error(request, str(    e))
+    # else:
+    #     schedulelist = ScheduleMaster.objects.all().order_by("-id")[:10]    
+    #     context ={'schedulelist':schedulelist}  
+        return render(request,'trnschdle.html')
 
 
 def pnr_status(request):
@@ -160,6 +161,14 @@ def post_cancel(request):
 
 def feedback(request):
      #return HttpResponse('this page for user give the feedback or suggestiions.')
+     if request.method =="POST":
+          email= request.POST['email']
+          subject= request.POST['subject']
+          descrip = request.POST['descrip']
+          user= user_feedback(subject=subject, message=descrip,email=email)
+          user.save()
+
+          
      return render(request,'feedback.html')
 
 '''form = FeedbackForm()
