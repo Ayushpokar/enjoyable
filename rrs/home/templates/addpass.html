@@ -54,13 +54,53 @@
 </style>
 </head>
 <body>
+    <form id="passengerForm" method="post" action="/reviewdetails">
+        {% csrf_token %}
+    <h2>Passenger Information</h2>
+    <label for="passengerCount">Number of passengers:</label>
+    <input type="number" id="passengerCount" name="passengerCount" min="1" max="5">
+    <button onclick="addPassengerFields()">Add Passenger Details</button>
+    
+        <div id="passengerDetails"></div>
+        <input type="submit" value="Submit">
+    </form>
 
-<div class="container">
+    <script>
+        function addPassengerFields() {
+            const passengerCount = document.getElementById("passengerCount").value;
+            const passengerDetailsContainer = document.getElementById("passengerDetails");
+
+            // Clear previous fields
+            passengerDetailsContainer.innerHTML = '';
+
+            // Add input fields for each passenger
+            for (let i = 1; i <= passengerCount; i++) {
+                const passengerDetails = document.createElement('div');
+                passengerDetails.className = 'passenger';
+                passengerDetails.innerHTML = `
+                    <h3>Passenger ${i}</h3>
+                    <label for="name${i}">Name:</label>
+                    <input type="text" id="name${i}" name="name${i}" required><br>
+                    <label for="age${i}">Age:</label>
+                    <input type="number" id="age${i}" name="age${i}" required><br>
+                    <label for=gender${i}>Gender:</label>
+                    <select id="gender${i}" name="gender${i}">
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select><br>
+                    <!-- Add more fields as needed -->
+                `;
+                passengerDetailsContainer.appendChild(passengerDetails);
+            }
+        }
+    </script>
+<!-- <div class="container">
     <h2>Passenger Information</h2>
     <label>Number of passengers:</label>
-    <input type="number"  id="passen" name="passen" min="1" max="5" required><br>
-    <button onclick="myFunction()">Submit</button><br>
-    <form id="passengerForm" >
+    <input type="text"  id="passen" name="passen" min="1" max="5" onchange = "myFunction()" required><br>
+    <!-- <button onchange="myFunction()">Submit</button><br>
+    <form id="passengerForm" method="post" >
         {% csrf_token %}
         <div id="passengerDetails"></div>
         <input type="submit" value="Submit">
@@ -88,6 +128,8 @@
         `;
         passengerDetailsContainer.appendChild(passengerDetails);
     }
+    // document.getElementById("passen").reset();
+    console.log(passengerDetailsContainer,"it is for details.")
 }
 
 // Submit the form data to Django view
@@ -95,18 +137,20 @@ document.querySelector('#passengerForm').addEventListener('submit', function(eve
     event.preventDefault();
     
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'book', true    );  
+    xhr.open('POST', 'reviewdetails', true    );  
     xhr.onload = function () {
       if (xhr.status ===  200) {
           alert('Success! Passenger added.')
+          window.location.href='/reviewdetails'
       } else {
           alert(`Error: ${xhr.status}`);
       }
     };
     let formData = new FormData(event.target);
     xhr.send(formData); 
+    console.log(formData);
 });
 </script>
-
+ -->
 </body>
 </html>

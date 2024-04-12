@@ -4,44 +4,42 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bootstrap demo</title>
+  <title>PNR Status</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
-<body style="background-image: url('train\ bg.jpg'); background-repeat: no-repeat;">
+<body style="background-image: url('/static/train\ bg.jpg'); background-repeat: no-repeat;">
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
     crossorigin="anonymous"></script>
 
 
-  <header class="p-3 bg-primary">
-    <div class="container">
-      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-
-
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><img src="2.png" class="mt-2" height="35px"></li>
-          <li><a href="index.html" class="nav-link px-2 text-white">Home</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">Train Schedules</a></li>
-          <li><a href="pnr.html" class="nav-link px-2 text-white">PNR Status</a></li>
-          <li><a href="cancel.html" class="nav-link px-2 text-white">Cancel Ticket</a></li>
-          <li><a href="#" class="nav-link px-2 text-white">About</a></li>
-          <li><a href="feedback.html" class="nav-link px-2 text-white">Feedback</a></li>
-        </ul>
-
-
-
-        <div class="ms-10" style=" text-decoration: none;">
-          <button type="button" class="btn btn-light"><a href="login.html" style=" text-decoration: none;">Log
-              In</a></button>
-          <button type="button" class="btn btn-warning"><a href="register.html"
-              style="text-decoration: none;">Sign-up</a></button>
+    <header class="p-3 bg-primary">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+         
+  
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a href="/dashboard" class="nav-link px-2 text-white">Home</a></li>
+            <li><a href="" class="nav-link px-2 text-white">Train Schedules</a></li>
+            <li><a href="/PNR status" class="nav-link px-2 text-white">PNR Status</a></li>
+            <li><a href="/cancel ticket" class="nav-link px-2 text-white">Cancel Ticket</a></li>
+            <li><a href="/about us" class="nav-link px-2 text-white">About</a></li>
+            <li><a href="/feedback" class="nav-link px-2 text-white">Feedback</a></li>
+          </ul>
+  
+         
+  
+          <div class="ms-10">
+            <b> Welcome {{ User }}!</b>
+            <button type="Submit"  class="btn btn-warning mx-1"><a href="/logout/" style="text-decoration: none;" >Sign-out</a></button>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
+  
 
   <div style="background-color:rgb(96, 191, 123);width: 400px;margin-left: 12cm;margin-top: 2cm;" class="rounded" >
     <form action="" class="rounded">

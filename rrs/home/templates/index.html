@@ -17,25 +17,25 @@
            
     
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-              <li><a href="/home" class="nav-link px-2 text-white">Home</a></li>
-              <li><a href="/Train schedules" class="nav-link px-2 text-white">Train Schedules</a></li>
-              <li><a href="/PNR status" class="nav-link px-2 text-white">PNR Status</a></li>
-              <li><a href="/cancel ticket" class="nav-link px-2 text-white">Cancel Ticket</a></li>
-              <li><a href="/about us" class="nav-link px-2 text-white">About</a></li>
-              <li><a href="/feedback" class="nav-link px-2 text-white">Feedback</a></li>
+              <li><a href="" class="nav-link px-2 text-white">Home</a></li>
+              <li><a href="" class="nav-link px-2 text-white">Train Schedules</a></li>
+              <li><a href="" class="nav-link px-2 text-white">PNR Status</a></li>
+              <li><a href="" class="nav-link px-2 text-white">Cancel Ticket</a></li>
+              <li><a href="" class="nav-link px-2 text-white">About</a></li>
+              <li><a href="" class="nav-link px-2 text-white">Feedback</a></li>
             </ul>
     
            
     
             <div class="ms-10">
-              <button type="Submit" class="btn btn-outline-light "><a href="/login/" style=" text-decoration: none;">Login</a></button>
+              <button type="Submit" class="btn btn-light "><a href="/login/" style=" text-decoration: none;">Login</a></button>
               <button type="Submit"  class="btn btn-warning "><a href="/register/" style="text-decoration: none;" >Sign-up</a></button>
             </div>
           </div>
         </div>
       </header>
     
-<form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;" action="/search"  method='post'>
+<form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;" action=""  method='post'>
   {% csrf_token %}
     <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
     <div class="col-12">
@@ -64,13 +64,9 @@
       <label> Departure date :</label> 
       <input type="date" class="form-control" name="depart_date" placeholder="">
     </div>
-    <div class="col-12 pt-3">
-      <label> Number of Passengers: </label>
-      <input type="number" class="form-control" name="no_of_passengers" min=1 max=5 placeholder="Number of Passengers">
     
-    </div>
       <div class="mt-4 text-center mb-2">
-      <button type="submit" class="btn btn-primary" onclick="search()">Search</button>
+      <button type="submit" class="btn btn-light" onclick="search()"> <a href="/login/">Search</a></button>
     </div>
 
 

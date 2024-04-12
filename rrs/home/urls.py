@@ -11,8 +11,10 @@ urlpatterns = [
     path('home', views.index, name='home'),
     path('dashboard', views.dashboard, name="dashboard"),
     path('search',views.searchtrain,name="search"),
-    path('book',views.booking,name="booking"),
-    path('Train schedules/', views.schedules, name="Train schedules"),
+    path('displaytn/',views.displaytn ,name="displaytn")  ,
+    path('book',views.addpass,name="addpass"),
+    path('reviewdetails',views.reviewdetails,name="reviewdetails"),
+    path('Train schedules', views.schedules, name="Train schedules"),
    
     path("PNR status/",views.pnr_status,name="PNR status"),
     path("cancel ticket/",views.cancel_ticket,name="cancel ticket"),

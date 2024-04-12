@@ -8,26 +8,13 @@ class searchtrainform(forms.Form):
     depart_date = forms.DateField() 
     
 
-class AddTrainForm(forms.ModelForm):
-    class Meta:
-        model = train_master
-        fields=('train_no','train_name', 'source_station', 'dest_station','depart_time','arrival_time','journey_duration',
-                'available_seats','total_seats')
 
-        '''def clean_departure_time(self):
-            departure_time = self.cleaned_data['departure_time']
-            # You can add custom validation for departure time if needed
-            return departure_time '''
-        
 
 # for add station 
 # forms.py
 
 
-class StationForm(forms.ModelForm):
-    class Meta:
-        model = station_master
-        fields = ['station_name', 'station_code', 'location', 'zone', 'state']
+
 
 
 

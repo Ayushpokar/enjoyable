@@ -1,5 +1,8 @@
 from django.db import models
-from datetime import datetime,date,time
+from datetime import datetime,date
+from  django.contrib.auth.models import AbstractUser
+from django.utils.crypto  import get_random_string
+import os
 
 # Create your model
 
@@ -19,19 +22,9 @@ class user_master(models.Model):
     class Meta:
         db_table = "user_master"
         
-class blogs(user_master):
-    title = models.CharField('Blog Title',max_length=200)
-    content = models.TextField('Content')
-    pub_date = models.DateTimeField('Date Published',auto_now_add=True)
-
-    class Meta:
-        ordering = ['-pub_date']
-
-    def __str__(self):
-        return f'{self.title} by {self.username}'
 class station_master(models.Model):
     station_id=models.AutoField(primary_key=True)
-    station_name=models.CharField(max_length=30,null=False,unique=True)
+    station_name=models.CharField(max_length=30,null=False)
     station_code=models.CharField(unique=True,max_length=5, null=False)
     location = models.CharField(max_length=50,null=False)
     zone=models.CharField(max_length=30,null=False)
@@ -41,36 +34,12 @@ class station_master(models.Model):
         return self.station_name
     class Meta:
         db_table= "station_master"  # specify the table name in database if not same as ClassName  
-class train_schedule(models.Model):  # inherit the properties of the parent class
-    train_no=models.ForeignKey(station_master,on_delete=models.CASCADE)
-    depart_time=models.TimeField()
-    arrival_time=models.TimeField()
-    platform=models.CharField(max_length=10)
-    status=models.BooleanField(default=False)   # True for running and False for stopped
-
-    def get_train_platform(self):
-        if self.status==True:
-            return self.platform+" Platform"
-        else:
-            return "Platform is not assigned"
-
-    def get_arrival_time(self):
-        current_time=datetime.now().time()
-        diff=current_time - self.start_time
-        minutes=diff.seconds//60+diff.days*24*60
-        hours,remaining_minutes=divmod(minutes,60)
-        return f"Train will arrive in {hours} hour(s) and {remaining_minutes} minute(s)"
-
-    class Meta:
-        verbose_name="Train Schedule"
-        verbose_name_plural="Trains Schedules"
-
 # for feedback
 class  user_feedback(models.Model):
     username=models.CharField(max_length=30)
     subject=models.CharField(max_length=100)
     message=models.TextField()
-    email = models.EmailField()
+    email = models.EmailField(default=None, blank=True)
 
     def  __str__(self):
         return self.username + "-"+self.subject
@@ -81,15 +50,11 @@ class  user_feedback(models.Model):
 class  train_master(models.Model):
     train_no  = models.IntegerField(primary_key=True)
     train_name = models.CharField(max_length=50, null = False)
-    source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE,to_field="station_id", verbose_name="Source Station",null=True)
-    dest_station = models.ForeignKey(station_master, on_delete=models.CASCADE, related_name='dest_station',to_field="station_id", null=True)
-    depart_time = models.TimeField(null=False,blank=False,default=datetime.now().time())
-    arrival_time=models.TimeField(null=False,blank=False, default=datetime.now().time())
+    source_station=models.ForeignKey(station_master, related_name="source_station", on_delete=models.CASCADE,to_field="station_code", verbose_name="Source Station",null=True)
+    dest_station = models.ForeignKey(station_master, on_delete=models.CASCADE, related_name='dest_station',to_field="station_code", null=True)
+    depart_time = models.TimeField(null=True,blank=True,default=None)
+    arrival_time=models.TimeField(null=True,blank=True, default=None)
     journey_duration=models.CharField(max_length=20)
-    available_seats=models.IntegerField(null=False, blank=False)
-    total_seats = models.IntegerField(null=False, blank=False)
-    depart_date = models.DateField(null=False,blank=False,default=datetime.today)
-    arrival_date=models.DateField(null=False, blank=False,default=datetime.today)
     
     def  __str__(self):
         return  f'{self.train_name}-{self.depart_time}'
@@ -97,10 +62,37 @@ class  train_master(models.Model):
     class Meta:
         db_table =  'train_master'
 
+class train_schedule(models.Model):  
+    schedule_id=models.AutoField(primary_key=True,default=None)
+    train_no=models.ForeignKey(train_master,on_delete=models.CASCADE)
+    station_code=models.ForeignKey(station_master,on_delete=models.CASCADE,to_field= 'station_code',default=None)
+    stop_time=models.TimeField(null=True,blank=True)
+    depart_time=models.TimeField(null=True,blank=True)
+    arrival_time=models.TimeField(null=True)
+    day=models.IntegerField(default=1,null=False)
+    seq=models.PositiveSmallIntegerField(null=False,default=None)
+    distance=models.IntegerField(null=False,default=0)
+    # def get_stop_time(self):
+    #     """Returns stop time formatted as string (HH:MM)"""
+    #     return str(self.stop_time).split('.')[0] 
+
+    # def set_stop_time(self,value):
+    #     """Sets stop time from a string (HH:MM)"""
+    #     self.stop_time = datetime.datetime.strptime(value,"%H:%M").time()
+
+    # stop_time = property(get_stop_time,set_stop_time)
+   
+    
+
+    class Meta:
+        db_table= "train_schedule"
+        verbose_name="Train Schedule"
+        verbose_name_plural="Trains Schedules"
+
     
 # passenger models
 class passenger_master(models.Model):
-    pass_id = models.IntegerField(primary_key=True)
+    pass_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
     age = models.PositiveSmallIntegerField()
     gender = models.CharField(max_length=6)
@@ -122,11 +114,11 @@ class class_master(models.Model):
 
 class RouteMaster(models.Model):
     route_id = models.AutoField(primary_key=True)
-    source_station = models.ForeignKey('station_master', on_delete=models.CASCADE, related_name='source_routes')
-    destination_station = models.ForeignKey('station_master', on_delete=models.CASCADE, related_name='destination_routes')
+    source_station = models.ForeignKey('station_master', on_delete=models.CASCADE, to_field="station_code",related_name='source_routes')
+    destination_station = models.ForeignKey('station_master', on_delete=models.CASCADE,to_field="station_code", related_name='destination_routes')
     distance = models.DecimalField(max_digits=10, decimal_places=2)
     route_name = models.CharField(max_length=255, blank=True, null=True)
-    travel_time = models.DurationField(null=True)
+    
 
 
     
@@ -145,7 +137,7 @@ class routestation(models.Model):
     departure_time = models.TimeField()
 
     class Meta:
-        db_table="route_stations"
+        db_table="routestation"
 
 
 # A Train can have multiple schedules for different days
@@ -182,7 +174,7 @@ class ScheduleMaster(models.Model):
         return f"Schedule {self.schedule_id}: {self.train.train_name} - {self.start_date}"
 
 class ticket_master(models.Model):
-    PNR_NO=models.IntegerField(primary_key=True)
+    PNR_NO=models.CharField(primary_key=True,max_length=10,default=get_random_string)
     train_no=models.ForeignKey("train_master", on_delete=models.CASCADE, related_name='tickets')
     pass_id=models.ForeignKey("passenger_master",on_delete=models.CASCADE)
     depart_station=models.ForeignKey("station_master", on_delete=models.CASCADE,related_name='depart_ticket')

@@ -63,53 +63,87 @@
     <input type="text" id="train_name" name="train_name">
     
     <label for="source_station"> Source Station: </label>
-    <input type="text" id="source_station" name="source_station">
+    <div>
+        <!-- <input type="text" id="source_station_input" name="source_station_input" oninput="filterStations('source')"> -->
+        <select id="source_station" name="source_station">
+        {% for station in source_stations %}
+              <option value="{{ station.station_code }}">{{ station.station_name }}</option>
+        {% endfor %}
+        </select>
+    </div>
 
     <label for="dest_station">Destination Station:</label>
-    <input type="text" id="dest_station" name="dest_station">
-
+    <div>
+        <!-- <input type="text" id="dest_station_input" name="dest_station_input" oninput="filterStations('dest')"> -->
+        <select id="dest_station" name="dest_station" >
+        {% for station in dest_stations %}
+            <option value="{{ station.station_code }}">{{ station.station_name }}</option>
+        {% endfor %}
+        </select>
+    </div>
     <label for="depart_time">Departure  Time:</label>
     <input type="time" id="depart_time" name="depart_time">
 
     <label for="arrival_time">Arrival Time:</label>
     <input type="time" id="arrival_time" name="arrival_time" >
 
-    <label for="depart_date">Departure Date:</label>
-    <input type="date" id="depart_date" name="depart_date" >
-
-    <label for="arrival_date">Arrival Date:</label>
-    <input  type="date" id="arrival_date" name="arrival_date" >
-
     <label for="journey_duration">Journey Duration:</label>
     <input type="text" id="journey_duration" name="journey_duration">
 
-    <label for="available_seats">Available Seats</label> 
-    <input type="number" id="available_seats" name="available_seats">
+    <label for="distance">Distance:</label>
+    <input type="number" id="distance" name="distance">
 
-    <label for="total_seats">Total Seats:</label>
-    <input type="number" id="total_seats" name="total_seats">
+    
     
     <button type="submit" onclick="addTrain()">Add Train</button>
   </form>
 </div>
 
 <script>
+  // function filterStations(type) {
+  //   const input = document.getElementById(`${type}_station_input`);
+    
+  //   const dropdown = document.getElementById(`${type}_station`);
+  //   const filter = input.value.toUpperCase();
+  //   console.log(filter);
+  //   const options = dropdown.getElementsByTagName('option');
+  //   let matchfound =  false;
+    
+  //   for (let i = 0; i < options.length; i++) {
+  //     const textValue = options[i].textContent || options[i].innerText;
+      
+  //     if (textValue.toUpperCase().indexOf(filter) > -1) {
+  //       options[i].style.display = "";
+  //       matchfound =  true;
+  //       console.log("mila station")
+  //     } else {
+  //       console.log("kaha mila yrr")
+  //       options[i].style.display = "none";
+  //     }
+  //   }
+    // If no matches found, show an error message.
+//     if(!matchfound){
+//       console.log("NOt found match.")
+//       dropdown.style.display = "block";
+//     }
+//     else{
+//       dropdown.style.display = "block";
+//     }
+// }
   function addTrain() {
     const train_no = document.getElementById("train_no").value;
     const train_name = document.getElementById('train_name').value;
-    const source_station = document.getElementById('source_station').value;
-    const dest_station = document.getElementById('dest_staion').value;
+    const source_station = document.getElementByName('source_station').value;
+    const dest_station = document.getElementByName('dest_staion').value;
     const depart_time = document.getElementById('depart_time').value;
     const arrival_time = document.getElementById('arrival_time').value;
-    const depart_date = document.getElementById('depart_date').value;
-    const arrival_date = document.getElementById('arrival_date').value;
     const journey_duration = document.getElementById('journey_duration').value;
-    const available_seats =  parseInt(document.getElementById('available_seats').value);
-    const total_seats = parseInt(document.getElementById('total_seats').value);
+    const  distance = document.getElementById('distance').value;
+  
+
     // Perform validation if needed
     if (!train_no || !train_name || !source_station || !dest_station ||
-      !depart_time || !arrival_time || !depart_date || !arrival_date ||
-      !journey_duration || !total_seats) {
+      !depart_time || !arrival_time || !journey_duration || !distance ) {
     alert('Please fill out all fields.');}
     return;
 
@@ -121,10 +155,7 @@
     dest_station: dest_station,
     depart_time: depart_time,
     arrival_time: arrival_time,
-    depart_date: depart_date,
-    arrival_date: arrival_date,
-    journey_duration: journey_duration,
-    total_seats: total_seats
+    journey_duration: journey_duration
   };
 
     // You can send the data to a server, update the UI, etc.

@@ -4,6 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Route Stations Form</title>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Autocomplete Example</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#station_input').on('input', function() {
+                    var input = $(this).val();
+                    $.ajax({
+                        url: '/addroutestn/',
+                        data: {
+                            'term': input
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            $('#station_list').empty();
+                            $.each(data, function(i, item) {
+                                $('#station_list').append($('<option>').text(item));
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,7 +81,7 @@
 </head>
 <body>
 
-<div id="routeStationsForm">
+<!-- <div id="routeStationsForm">
     <h2 style="text-align: center;">Route Stations Form</h2>
     <form id="routeStationsForm" action="" method="post">
 
@@ -81,8 +107,9 @@
         <input type="time" id="arrival_time" name="arrival_time" required>
 
         <label for="departure_time">Departure Time:</label>
-        <input type="time" id="departure_time" name="departure_time" required>
-
+        <input type="time" id="departure_time" name="departure_time" required> -->
+        <input type="text" id="station_input">
+        <datalist id="station_list"></datalist>
         <button type="submit" onclick="validateForm()">Submit</button>
         <p class="error-message" id="errorMessage"></p>
     </form>
