@@ -14,6 +14,7 @@ from django.core.serializers.json import  DjangoJSONEncoder
 from .models import *
 from datetime import datetime
 from django.contrib.auth.hashers import make_password ,check_password
+from datetime import datetime,date,timedelta
 
 
 
@@ -105,6 +106,7 @@ def logout_view(request):
 #@login_required(login_url='/login')
 def dashboard(request):
     stn =station_master.objects.all()
+    clss=class_master.objects.all()
     
 
     print(request.user)
@@ -115,7 +117,7 @@ def dashboard(request):
         
     }
     # get the current logged in user details from session and display on dashboard page
-    return render(request, 'dashboard.html',{ 'stn': stn})
+    return render(request, 'dashboard.html',{ 'stn': stn,'clss':clss})
 
 def about(request):
     return render(request,"srchtrn.html")
@@ -296,15 +298,17 @@ def searchtrain(request):
         source = request.POST.get("source") 
         destination = request.POST.get("destination")
         depart_date= request.POST.get("depart_date")
+        clss=int(request.POST.get( "class"))
         
         
         
-         # Query trains based on source station and destination station
-        print(source,destination)
+        # Query trains based on source station and destination station
+        print(source,destination,type(depart_date))
         stn_src = station_master.objects.filter(station_code = source)
         print(stn_src)
         for station in stn_src:
             source_names = station.station_name
+            
         print(source_names) 
         stn_des = station_master.objects.filter(station_code = destination)
         print(stn_des)
@@ -314,28 +318,37 @@ def searchtrain(request):
         
         
         # query based on depart_date
-        try:
-                parsed_date = datetime.strptime(depart_date, '%Y-%m-%d').date()
-        except ValueError:
-                # Handle the case when date is not in the expected format
-                return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
-        print(parsed_date)
+        # try:
+        #         parsed_date = datetime.strptime(depart_date, '%Y-%m-%d').date()
+        # except ValueError:
+        #         # Handle the case when date is not in the expected format
+        #         return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
+        # print(parsed_date)
         filtered_trains=[]
         rdes = train_schedule.objects.filter(
         
             station_code_id=destination,
         ).values()
         
-        
+        print(rdes)
         for  i in rdes:
              t_no=i["train_no_id"]
              print("the t_no  ",t_no)
+             # distance of destination
+             ddist = i['distance']
+             print(ddist)
+             day=i['day']
+             arr=str(i['arrival_time'])
+             print("this is for arival time",arr)
              sdes=train_schedule.objects.filter(train_no_id = t_no,station_code_id=source).values()
              print("sdes",sdes)
-             for x in rdes:
-                  arr=x['arrival_time']
-                  print("this is for arival time",arr)
              for  j in sdes:
+                 print(j['station_code_id'])
+                 # distance at source
+                 sdist=j['distance']
+                 print(sdist,"is the dist from source")
+                 depart_time=str(j['depart_time'])
+                 print("depart time.",depart_time)
                  print(j['seq'],i['seq'])
 
                  if j['seq'] < i['seq'] :
@@ -344,33 +357,68 @@ def searchtrain(request):
                     for  k in t_name:
                          
                          filtered_trains.append(k)
-                 
-        # request.session['searched train']=filtered_trains
+
+        # find tottal diatance between source and detination
+        total_dist=int(ddist)-int(sdist)
+        print(total_dist,"is the total distance.",clss)
+        if(clss==1):
+             fare=total_dist*0.80
+        elif(clss==2):
+             fare=(total_dist*0.80)*2
+        elif(clss==3):
+             fare=(total_dist*0.80)*3
+        else:
+             fare=(total_dist*0.80)*4
+              
+        # parsed date of depart,time and arrival time
+        dep_datetime=datetime.strptime(depart_date+' '+depart_time,'%Y-%m-%d %H:%M:%S')
+        arr_time=datetime.strptime(arr, '%H:%M:%S').time()
+
+        # calculate arivaldatetime
+        if arr_time < dep_datetime.time() :
+            arr_datetime=dep_datetime + timedelta(days=1)
+        else:
+            arr_datetime=dep_datetime
+            
+        arr_date = arr_datetime.strftime('%Y-%m-%d')
         print("filters trains",filtered_trains)
         station = {
             'src': source_names,
             'dest':des_names,
             
-        }      
-        # Convert time objects to strings
-        filtered_trains_serialized = []
-        for train in filtered_trains:
-            train_data = {
-                'train_no': train['train_no'],
-                'train_name': train['train_name'],
-                # Convert time objects to strings
-                'arrival_time': str(train['arrival_time']),
-                'departure_time': str(train['depart_time']),
-                'journey_duration': train['journey_duration'],
-                # Add other fields as needed
-            }
+        }   
+        try:   
+            # Convert time objects to strings
+            filtered_trains_serialized = []
+            for train in filtered_trains:
+                train_data = {
+                    'train_no': train['train_no'],
+                    'train_name': train['train_name'],
+                    # Convert time objects to strings
+                    'arrival_time': str(train['arrival_time']),
+                    'departure_time': str(train['depart_time']),
+                    'journey_duration': train['journey_duration'],
+                    # Add other fields as needed
+                }
             
-        filtered_trains_serialized.append(train_data)
+            filtered_trains_serialized.append(train_data)
         
-        # Store the serialized data in the session
-        request.session["info"] = json.dumps({"trains": filtered_trains_serialized, "station": station}, cls=DjangoJSONEncoder)
-             #print(t_no,sdes)
-        request.session["depart_date"]= depart_date
+            # Store the serialized data in the session
+            request.session["info"] = json.dumps({"trains": filtered_trains_serialized, "station": station}, cls=DjangoJSONEncoder)
+            #print(t_no,sdes)
+        except:
+            print("Error in serializing data")
+            messages.error(request, "No trains found")
+
+
+        dat={
+             'arrival_time':arr,
+             'depart_time':str(depart_time),
+             'depart_date':str(depart_date),
+             'arrival_date':arr_date
+        }
+        request.session["dat"]= json.dumps(dat,cls=DjangoJSONEncoder) 
+        request.session["fare"]=fare
        
        
        
@@ -386,6 +434,9 @@ def searchtrain(request):
 def displaytn(request):          
      session_data_json=request.session.get('info')
      print ("Session Data Json ",type(session_data_json))
+     fare=request.session.get('fare',None)
+     datee=request.session.get( 'dat', None)
+     dat=json.loads(datee) 
      if  not session_data_json :
           return HttpResponseRedirect('/dashboard')
      else:  
@@ -394,7 +445,7 @@ def displaytn(request):
           trains=session_data.get('trains',[])
           print(stations)
          
-     return  render(request,'searchedtrains.html',{"trains":trains,'station':stations}) 
+     return  render(request,'searchedtrains.html',{"trains":trains,'station':stations,'fare':fare,'dat':dat}) 
     
      
 def addpass(request):      
@@ -491,6 +542,3 @@ def booking(request):
 #     print("No Data to delete")
 
 
-
-
-        

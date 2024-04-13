@@ -61,7 +61,20 @@
             </select>
           <div>
             <div class="col-12 pt-5">      
+              <label for="depart_date">Departure Date:</label>
             <input type="date" class="form-control" name="depart_date" placeholder="">
+          </div>
+          <div class="col-12 pt-5">
+            <label for="class">Class</label>
+            <select id="class"  name="class" class="form-select w-100 mt-4" aria-label="Default select example"> 
+              {% if clss %}
+              {% for clas in clss%}
+                  <option  value="{{clas.class_id}}">{{ clas.class_name }} </option>
+              {% endfor %}
+              {% else %}
+                No available classes at the moment. Please try again later.
+              {% endif %}  
+            </select>
           </div>
          
           <div class="mt-4 text-center mb-2">

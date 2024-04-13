@@ -123,6 +123,7 @@
         <th scope="col">  Destination Station</th>    
         <th scope="col">Departure  date&Time</th>   
         <th scope="col">Arrival  date&Time</th> 
+        <th scope="col">Fare(per person)</th>
         
         
       </tr>
@@ -136,9 +137,9 @@
           <td >{{ train.train_name }}</td>
           <td >{{ station.src }}</td>
           <td >{{ station.dest }}</td> 
-          <td> {{ train.depart_date }}  {{ train.depart_time }}</td>
-          <td> {{ train.arrival_date }} {{ train.arrival_time }}</td>
-          
+          <td> {{ dat.depart_date }}  {{ dat.depart_time }}</td>
+          <td> {{ dat.arrival_date }} {{ dat.arrival_time }}</td>
+          <td>{{ fare }}</td>
           
           <td><button id="button" type="submit" >BOOK</button></td>
 
@@ -150,6 +151,8 @@
 
       <b> No Trains Available For The Given Details! </b>
   {% endif %}
+  {% if messages %}
+        <h1>{{ messages.error }}</h1>
 
       </table>
 </form>

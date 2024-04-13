@@ -106,7 +106,7 @@ class class_master(models.Model):
     description= models.TextField(max_length=100)
     features = models.TextField(max_length=100)
     capacity = models.IntegerField()
-    fare = models.FloatField()
+   
     class Meta:
         db_table = "class_master"
         # for calculating fare
