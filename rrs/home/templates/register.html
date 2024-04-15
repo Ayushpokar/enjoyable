@@ -40,7 +40,7 @@
 </head>
   <body style="background-image: url('D:\rrsdjango\cor\templates\train\bg.jpg'); background-repeat: no-repeat; background-size: 140%;">
     
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    
   
     
     <header class="p-3 bg-primary">
@@ -71,35 +71,141 @@
   
 
     <h2 class="text-center">Registration</h2>
-    <form action="" method="POST">
+    <form action="" method="POST" name="myForm" onsubmit="return validateForm()">
       {% csrf_token %}
         <label for="firstName">First Name:</label>
-        <input type="text" id="firstname" name="firstname" required>
+        <input type="text" id="firstname" name="firstname" ><b><span style="color: red;" class="error" id="a" name="error"></span></b><br>
+        <div id="div"></div>
 
         <label for="lastName">Last Name:</label>
-        <input type="text" id="lastname" name="lastname" required>
+        <input type="text" id="lastname" name="lastname" ><b><span style="color: red;" class="error" id="b" name="error"></span></b><br>
 
         <label for="Username">Username:</label>
-        <input type="text"  id ="username" name="username" required>
+        <input type="text"  id ="username" name="username" ><b><span style="color: red;" class="error"  id="c"></span></b><br>
 
         <label for="password">Password:</label>
-        <input type="password"  id="password" name="password" required>
+        <input type="password"  id="password" name="password" ><b><span style="color: red;" class="error" id="d"></span></b><br>
 
         
         <label for="dob">Date of Birth:</label>
-        <input type="date"  id="dob" name="dob" required>
+        <input type="date"  id="dob" name="dob" ><b><span style="color: red;" class="error" id="e"></span></b><br>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" ><b><span style="color: red;" class="error" id="f"></span></b><br>
 
         <label for="mobile">Mobile Number:</label>
-        <input type="tel" id="mobile" name="mobile" required>
+        <input type="tel" id="mobile" name="mobile" ><b><span style="color: red;" class="error" id="g" ></span></b><br>
 
         <label for="address">Address:</label>
-        <input type="text" id="address" name="address" required>
+        <input type="text" id="address" name="address" ><b><span style="color: red;" class="error" id="h" ></span></b><br>
 
-
-       <button type="submit" class="button">Register</button>
+        <input type="submit" value="Register" class="button">
+       
     </form>
 </div>
+<script>
+ 
+ function validateForm()
+{
+var a=document.forms['myForm']["firstname"].value;
+var b=document.forms['myForm']["lastname"].value;
+var c=document.forms['myForm']["username"].value;
+var d=document.forms['myForm']["password"].value;
+var e=document.forms['myForm']["dob"].value;
+var f=document.forms['myForm']["email"].value;
+var g=document.forms['myForm']["mobile"].value;
+var h=document.forms['myForm']["address"].value;
+
+if (a.length==0) 
+{
+  document.getElementById("a").innerHTML="*Feild can't be empty";
+  return false;
+} 
+else{
+  document.getElementById("a").innerHTML="";
+
+}
+if(b.length==0)
+{
+  document.getElementById("b").innerHTML="*Feild can't be empty";
+  return false;
+}
+else{
+  document.getElementById("b").innerHTML="";
+
+}
+if(c.length==0)
+{
+  document.getElementById("c").innerHTML="*Feild can't be empty";
+  return false;
+}
+else{
+  document.getElementById("c").innerHTML="";
+
+}
+if(d.length==0)
+{
+  document.getElementById("d").innerHTML="*Feild can't be empty";
+}
+else{
+  document.getElementById("d").innerHTML="";
+
+}
+if(e.length==0)
+{
+  document.getElementById("e").innerHTML="*Feild can't be empty";
+}
+else{
+  document.getElementById("e").innerHTML="";
+
+}
+if(f.length==0)
+{
+  document.getElementById("f").innerHTML="*Feild can't be empty";
+}
+else{
+  document.getElementById("f").innerHTML="";
+
+}
+if(g.length==0)
+{
+  document.getElementById("g").innerHTML="*Feild can't be empty";
+}
+else{
+  document.getElementById("g").innerHTML="";
+
+}
+if(h.length==0)
+{
+  document.getElementById("h").innerHTML="*Feild can't be empty";
+}
+else{
+  document.getElementById("h").innerHTML="";
+
+}
+
+ if(e.length<8)
+{
+  document.getElementById("d").innerHTML="*Password should have 8 lenght";
+  return false;
+}
+else{
+  document.getElementById("d").innerHTML="";
+
+}
+ if(g.length>10 || g.length<10)
+{
+  document.getElementById("g").innerHTML="*Should have 10 length";
+  return false;
+
+}
+else{
+  document.getElementById("g").innerHTML="";
+
+}
+}
+
+</script>
   </body>
+</html>
+  
