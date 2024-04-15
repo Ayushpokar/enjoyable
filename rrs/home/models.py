@@ -172,6 +172,18 @@ class ScheduleMaster(models.Model):
     def __str__(self):
         #return f"Schedule {self.schedule_id}: {self.train.name} - {self.start_date}-{self.end_date}, Week:{self.week
         return f"Schedule {self.schedule_id}: {self.train.train_name} - {self.start_date}"
+# create model for coach master
+# class coach_master(models.Model)
+#     coach_id=models.IntegerField(primary_key=True)
+#     coach_type=models.CharField(max_length=20)  ##AC1,AC2,AC3,AC3,S1,S2
+#     train_no=models.ForeignKey("train_master", on_delete=models.CASCADE, related_name='coaches')
+
+#     def __str__(self):
+#         return f"Coach {self.coach_id}: {self.coach_type} - {self.train.train_name}"
+
+# class s
+
+
 
 class ticket_master(models.Model):
     PNR_NO=models.CharField(primary_key=True,max_length=10,default=get_random_string)
