@@ -65,13 +65,14 @@
       </header>
       <div class="login-container" style="margin-top: 100px; margin-left: 500px;">
         <h2  class="text-center">Login</h2>
-        <form  method="post">
+
+        <form  method="post" name="myForm" onsubmit="return validateForm()">
           {% csrf_token %}
             <label for="id">username</label><br>
-            <input type="text"  name="username" required>
+            <input type="text"  name="username" ><b><span style="color: red;" id="a"></span></b><br>
     
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" ><b><span style="color: red;" id="b"></span></b>
     
             <button type="submit" id="button" class="button">Login</button>
         </form>
@@ -79,3 +80,36 @@
         <p>Don't have an account? <a href="/register/">Register</a></p>
     </div>
   </body>
+  <script>
+    function validateForm(){
+      var a=document.forms['myForm']["username"].value;
+      var b=document.forms['myForm']["password"].value;
+    if (a.length==0) 
+{
+  document.getElementById("a").innerHTML="*Feild can't be empty";
+  return false;
+} 
+else{
+  document.getElementById("a").innerHTML="";
+
+}
+if(b.length==0)
+{
+  document.getElementById("b").innerHTML="*Feild can't be empty";
+  return false;
+}
+else{
+  document.getElementById("b").innerHTML="";
+
+}
+// if(b.length<=8)
+// {
+//   document.getElementById("b").innerHTML="*Should have 8 length or more";
+//   return false;
+// }
+// else{
+//   document.getElementById("b").innerHTML="";
+// }
+}
+  </script>
+</html>
