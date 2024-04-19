@@ -3,11 +3,8 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import  login_required
-from django.forms import DateTimeField
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.contrib.auth.models import User
-from django.urls import reverse         
+from django.shortcuts import get_object_or_404, redirect, render    
 from .forms import *
 import json
 from django.core.serializers.json import  DjangoJSONEncoder
@@ -82,9 +79,7 @@ def handlelogin(request):
             #     login(request, user)
             #     request.session['userid'] = user.id
             #     request.session['username'] = user.username
-            user_name={
-             'User':user.username
-            }
+           
             print('User Logged In Successfully!')
             return redirect('/dashboard')
             # else:
@@ -117,39 +112,54 @@ def dashboard(request):
         
     }
     # get the current logged in user details from session and display on dashboard page
-    return render(request, 'dashboard.html',{ 'stn': stn,'clss':clss})
+    return render(request, 'dashboard.html',{ 'stn': stn,'clss':clss,'user':user_name})
 
 def about(request):
-    return render(request,"srchtrn.html")
+    return HttpResponse('this is for about information of our admin. ')
 
 def contact(request):
     return HttpResponse('this is for contact information of our admin. ')
 
 
 def schedules(request):
-    # if request.method == 'POST':
-    #     date = request.POST['date']
-    #     time = request.POST['time']
-    #     duration = int(request.POST['duration'])
-    #     try:
-    #         obj=ScheduleMaster()
-    #         obj.save_schedules(date,time,duration)
-    #         messages.success(request, "Scheduled Successfully ")
-    #         return redirect('/schedules')
-    #     except Exception as e:
-    #         messages.error(request, str(    e))
-    # else:
-    #     schedulelist = ScheduleMaster.objects.all().order_by("-id")[:10]    
-    #     context ={'schedulelist':schedulelist}  
-        return render(request,'trnschdle.html')
+    if request.method=='POST':
+        trn_no=request.POST.get('trn_no')
+        trn_sch=train_schedule.objects.filter(train_no=trn_no)
+        print(trn_sch)
+        for i in trn_sch:
+            tno=i.train_no
+            st=i.station_code
+
+        return HttpResponse(tno,st)
+    return render(request,'trnschdle.html')
 
 
 def pnr_status(request):
     #return HttpResponse('this page is for check pnr status of a particular train.')
+    if request.method== "POST":
+        pnr = request.POST['pnr']
+        ticket=ticket_master.objects.filter(PNR_NO=pnr)
+        if ticket:
+            return render(request,'pnr.html',{'ticket':ticket})
+        else:
+           messages.error(request,"Invalid PNR Number")
+       
     return render(request,'pnr.html')
 
 def cancel_ticket(request):
-    #return HttpResponse("This Page Is For Canceling Tickets")
+    
+    if request.method=='POST':
+        pnr=request.POST.get('pnr')
+        ticket=ticket_master.objects.filter(PNR_NO=pnr)
+        if ticket:
+            ticket.delete()
+           
+            print("deleted.")
+            return render(request,'cancel.html',{'msg':'Your ticket has been cancelled successfully!'})
+        else:
+            print("already deleted.")
+            messages.error(request,"Invalid PNR Number")
+    # return HttpResponse("This Page Is For Canceling Tickets")
     return  render(request,"cancel.html",{'msg':'Please enter your ticket number to proceed.'})
 
 '''@login_required()   
@@ -171,7 +181,11 @@ def feedback(request):
           email= request.POST['email']
           subject= request.POST['subject']
           descrip = request.POST['descrip']
-          user= user_feedback(subject=subject, message=descrip,email=email)
+          username=request.session.get('username')
+        #   username={
+        #       'User':username
+        #   }
+          user= user_feedback(subject=subject, message=descrip,email=email,username=username)
           user.save()
 
           
@@ -271,26 +285,6 @@ def addroutestn(request):
     #       HttpResponse("Error in adding Route") 
     # return render(request,"routestation.html")
 
-# def addroutestn(request):
-#     global route_stations
-#     if request.method=='GET':
-#          return JsonResponse([i.toJSON() for i in route_stations], safe=False)
-#     elif request.method=='POST':
-#        # print(route_stations)
-#         stat_id=request.POST['stat_id']
-#         pos=request.POST['position']
-#         act=request.POST['isActive']
-#         with open('static/js/routes.json','r+') as f:
-#               data=json.load(f)
-#               st=data[int(pos)]
-#               st["isActive"]=act
-#               st["staId"]=stat_id
-#               data[int(pos)]=st
-#               f.seek(0)
-#               json.dump(data,f)
-#               f.truncate()  
-#               route_stations=RouteStations(route_stns=data).getRouteStns()  
-#     return JsonResponse({"message":"Success"},safe=False)  
 
 def searchtrain(request):
     # get the data from the user
@@ -301,7 +295,8 @@ def searchtrain(request):
         clss=int(request.POST.get( "class"))
         
         
-        
+        # dep_date=datetime.strptime(depart_date, "%Y-%m-%d").date()
+        # print(dep_date)
         # Query trains based on source station and destination station
         print(source,destination,type(depart_date))
         stn_src = station_master.objects.filter(station_code = source)
@@ -316,15 +311,9 @@ def searchtrain(request):
             des_names = station.station_name
         print(des_names)
         
-        
-        # query based on depart_date
-        # try:
-        #         parsed_date = datetime.strptime(depart_date, '%Y-%m-%d').date()
-        # except ValueError:
-        #         # Handle the case when date is not in the expected format
-        #         return HttpResponse("Invalid date format. Please use YYYY-MM-DD.")
-        # print(parsed_date)
         filtered_trains=[]
+        # get the train number from the train_schedule table
+        # rdes is destination search from train_schedule table
         rdes = train_schedule.objects.filter(
         
             station_code_id=destination,
@@ -340,54 +329,79 @@ def searchtrain(request):
              day=i['day']
              arr=str(i['arrival_time'])
              print("this is for arival time",arr)
+             # sdes is source search from train_schedule table and check train_no_id of source matches with rdes
              sdes=train_schedule.objects.filter(train_no_id = t_no,station_code_id=source).values()
              print("sdes",sdes)
-             for  j in sdes:
-                 print(j['station_code_id'])
-                 # distance at source
-                 sdist=j['distance']
-                 print(sdist,"is the dist from source")
-                 depart_time=str(j['depart_time'])
-                 print("depart time.",depart_time)
-                 print(j['seq'],i['seq'])
+             # if  condition aayegi sdes agr khali hai toh
+             if len(sdes)==0:
+                 print("sdes is empty")
+                 break
+             else:      
+                for  j in sdes:
+                     print(j['station_code_id'])
+                     # distance at source
+                     sdist=j['distance']
+                     print(sdist,"is the dist from source")
+                     depart_time=str(j['depart_time'])
+                     # check that depart time is after the current time or not  
+                     depat_time=datetime.strptime(depart_date+' '+depart_time, '%Y-%m-%d %H:%M:%S')
+                     print(depat_time)
+                     current_time=datetime.now()
+                     print(current_time)
+                     if depat_time < current_time:
+                 
+                        print("depart time is less than current time")
+                        break
+                        # if depart time is less than current time then check for next day
+                    
+                     else:
 
-                 if j['seq'] < i['seq'] :
+                        print("depart time.",depart_time)
+                        print(j['seq'],i['seq'])
+
+                        if j['seq'] < i['seq'] :
                       
-                    t_name = train_master.objects.filter(train_no=t_no).values()
-                    for  k in t_name:
+                            t_name = train_master.objects.filter(train_no=t_no).values()
+                            for  k in t_name:
                          
-                         filtered_trains.append(k)
+                                filtered_trains.append(k)
 
-        # find tottal diatance between source and detination
-        total_dist=int(ddist)-int(sdist)
-        print(total_dist,"is the total distance.",clss)
-        if(clss==1):
-             fare=total_dist*0.80
-        elif(clss==2):
-             fare=(total_dist*0.80)*2
-        elif(clss==3):
-             fare=(total_dist*0.80)*3
-        else:
-             fare=(total_dist*0.80)*4
+                # find tottal diatance between source and detination
+                total_dist=int(ddist)-int(sdist)
+                print(total_dist,"is the total distance.",clss)
+                if(clss==1):
+                    fare=total_dist*0.80
+                elif(clss==2):
+                    fare=(total_dist*0.80)*2
+                elif(clss==3):
+                    fare=(total_dist*0.80)*3
+                else:
+                    fare=(total_dist*0.80)*4
               
-        # parsed date of depart,time and arrival time
-        dep_datetime=datetime.strptime(depart_date+' '+depart_time,'%Y-%m-%d %H:%M:%S')
-        arr_time=datetime.strptime(arr, '%H:%M:%S').time()
+                # parsed date of depart,time and arrival time
+                dep_datetime=datetime.strptime(depart_date+' '+depart_time,'%Y-%m-%d %H:%M:%S')
+                arr_time=datetime.strptime(arr, '%H:%M:%S').time()
 
-        # calculate arivaldatetime
-        if arr_time < dep_datetime.time() :
-            arr_datetime=dep_datetime + timedelta(days=1)
-        else:
-            arr_datetime=dep_datetime
+                # calculate arivaldatetime
+                if arr_time < dep_datetime.time() :
+                    arr_datetime=dep_datetime + timedelta(days=1)
+                else:
+                    arr_datetime=dep_datetime
             
-        arr_date = arr_datetime.strftime('%Y-%m-%d')
-        print("filters trains",filtered_trains)
+                arr_date = arr_datetime.strftime('%Y-%m-%d')
+                print("filters trains",filtered_trains)
         station = {
             'src': source_names,
             'dest':des_names,
             
-        }   
-        try:   
+        }
+        print(station)   
+        if len(filtered_trains)==0 :  # Check if filtered_trains is empty
+            messages.error(request, "No trains found")
+            filtered_trains_serialized=[]
+            print("if condition")
+        else:    
+           
             # Convert time objects to strings
             filtered_trains_serialized = []
             for train in filtered_trains:
@@ -400,26 +414,25 @@ def searchtrain(request):
                     'journey_duration': train['journey_duration'],
                     # Add other fields as needed
                 }
-            
+
             filtered_trains_serialized.append(train_data)
         
-            # Store the serialized data in the session
-            request.session["info"] = json.dumps({"trains": filtered_trains_serialized, "station": station}, cls=DjangoJSONEncoder)
+           
             #print(t_no,sdes)
-        except:
-            print("Error in serializing data")
-            messages.error(request, "No trains found")
-
-
-        dat={
-             'arrival_time':arr,
-             'depart_time':str(depart_time),
-             'depart_date':str(depart_date),
-             'arrival_date':arr_date
-        }
-        request.session["dat"]= json.dumps(dat,cls=DjangoJSONEncoder) 
-        request.session["fare"]=fare
        
+
+            print(type(arr),type(arr_date))
+            dat={
+                'arrival_time':arr,
+                'depart_time':str(depart_time),
+                'depart_date':str(depart_date),
+                'arrival_date':arr_date
+            }
+            request.session["dat"]= json.dumps(dat,cls=DjangoJSONEncoder) 
+            request.session["fare"]=fare
+            request.session["clss"]=clss
+         # Store the serialized data in the session
+        request.session["info"] = json.dumps({"trains": filtered_trains_serialized, "station": station}, cls=DjangoJSONEncoder)      
        
        
         return HttpResponseRedirect('/displaytn')
@@ -457,9 +470,10 @@ def reviewdetails(request):
 
         passenger_count = int(request.POST.get('passengerCount', 0))
         print(passenger_count)
+       
         passengers = []
         for i in range(1, passenger_count + 1):
-            
+                
             name = request.POST.get(f'name{i}', '')
             age = int(request.POST.get(f'age{i}', 0))
             gender = request.POST.get(f'gender{i}','')
@@ -476,14 +490,18 @@ def reviewdetails(request):
     trains=session_data.get("trains",[])
     print(trains)
     passengers=request.session.get('passengers',None)
-    if passengers is None:
-       return HttpResponseRedirect("/addpass?back=/reviewdetails/")
-    else:
-    #    context={"train":trains,"stn":station,"pax":passengers}
+    tot_fare=request.session.get('fare')
+    if passengers is not None:
+        tot_pass=len(passengers)
+        tot_fare=tot_fare*tot_pass
+        request.session['tot_fare']=tot_fare
+        print(passengers)
+        return render(request,'revtktdet.html',{"trains":trains,"station":station,"paxs":passengers,'fare':tot_fare})
        
-       print(passengers)
-       return render(request,'revtktdet.html',{"trains":trains,"station":station,"paxs":passengers})
+    else:
+        return HttpResponseRedirect('/addpassengers')
 
+    
     #    return render(request,'bookingdetail.html',context)    
 
 # @login_required
@@ -498,47 +516,130 @@ def reviewdetails(request):
 #            trns=info["trains"]
 #            paxs=request.session.get('passengers')
 #            bkng=ticket_master(user=user,train=trns[0],from_station=stns[0].id,to_station=stns[1].id,no_of_passengers=len
-    return render(request,'revtktdet.html')
+def payment(request):
+    tot_fare=request.session.get('tot_fare')
+    if request.method=="POST":
+            name=request.POST.get('cardholder')
+            card_no=request.POST.get('cardnumber')
+            # card_type=request.POST.get('card_type')
+            expiry_date=request.POST.get('expiry')
+            card_cvv=request.POST.get('cvv')
+            print(name,card_no,expiry_date,card_cvv)
+            pay_det={
+                'name':name,
+                'card_no':card_no,
+                'expiry_date':expiry_date,
+                'card_cvv':card_cvv,
+            }
+            # if len(pay_det)!=0:
+            #     request.session['pay_det']=pay_det
+            #     return HttpResponseRedirect('/booking')
+            # else:
+            #     return HttpResponse("payment failed")
+            
+            
+    return render(request,"payment.html",{'fare':tot_fare})
 
+import random
+import string
 def booking(request):
-     session_data_json=request.session.get('info')
-     session_data=json.loads(session_data_json)
-     stations=session_data.get("stations",{})
-     trains=session_data.get("trains",[])
-     tr=[]
-     for item in trains:
-          try:
-               train_no=item["train_no"]
-               train_name=item["train_name"]
-          except:
-               pass
-     
-     tr.append({'train_no':train_no, 'train_name':train_name})
-     station_from=stations['source']
-     station_to=stations['destination']
-# js_file_path='static/jsfiles/stations.json'
-# json_data = open(js_file_path,'r')
-# stations = json.loads(json_data.read())
-# st_to_create  = []
-# for d in stations["features"]:
-#     data = d["properties"]
-#     st_to_create.append(
-#         station_master(
-#             state=data["state"],
-#             station_code=data["code"],
-#             station_name=data["name"],
-#             zone=data["zone"],
-#             location=data["address"]
-#         )
-#     )
-# station_master.objects.bulk_create(st_to_create)
-# print('Data inserted successfully')
+     """Generate a random PNR number."""
+     pnr=''.join(random.choices( string.digits, k=10))
+     session_data_json=request.session.get('info')  # train data session 
+     session_data=json.loads(session_data_json)  # load the train data session
+     stations=session_data.get("station",{}) #station data session
+     trains=session_data.get("trains",[]) #train data session
+     class_id=request.session.get('clss')      # having clas_id in the session
+     passengers=request.session.get('passengers') 
+     tot_fare=request.session.get('tot_fare')
+     datt=request.session.get('dat')  # session of arrival date , depart_date , arrival_time and depart_time.
+     dat=json.loads(datt)
+     num_passengers=len(passengers)
 
-# to delete all stations from table
-# try:
-#     station_master.objects.all().delete()
-#     print("dleted successfully.")
-# except:
-#     print("No Data to delete")
+     if stations:
+         src=station_master.objects.filter(station_name=stations['src'])
+         for i in src:
+             srcstation_code=i.station_code
+         srcinst=station_master.objects.get(station_code=srcstation_code)
+         dest=station_master.objects.filter(station_name=stations['dest'])
+         for i in dest:
+             desstation_code=i.station_code
+         destinst=station_master.objects.get(station_code=desstation_code)
+
+     classinst=class_master.objects.get(class_id=class_id)
+# Find available coaches for the given train, class, and station
+     available_coaches = coach.objects.filter(
+        coach_type=class_id,
+        seat__is_reserved=False
+     ).distinct()
+     print("availavle coach",available_coaches)
+     if not available_coaches:
+        raise Exception("No available coaches found.")
+        # Get the first available coach
+     coache = available_coaches.first()
+     print("coache",coache)
+     
+        # Get the number of available seats in the coach
+     available_seat_count =seat.objects.filter(coach_id=coache.coach_no,is_reserved=False).count()
+     print("availabke seat_count",available_seat_count)
+     if available_seat_count < num_passengers:
+        raise Exception("Insufficient available seats.")
+
+        # Reserve seats in the coach
+     reserved_seats = []
+     for _ in range(num_passengers):
+        available_seat = seat.objects.filter(coach_id=coache.coach_no,is_reserved=False).first()
+        available_seat.is_reserved = True
+        available_seat.save()
+        reserved_seats.append(available_seat.seat_no)
+     print("reserved seats",reserved_seats)
+     # combine datetime field
+     
+     arival_da=f"{ dat['arrival_date'] } { dat['arrival_time'] }"
+     depart_da=f"{ dat['depart_date'] } { dat['depart_time'] }"
+     print(arival_da,depart_da)
+        # Create a ticket for the booking
+     ticket = ticket_master.objects.create(
+        PNR_NO=pnr,
+        train_no_id=trains[0] ['train_no'],
+        departure_datetime=depart_da,
+        arrival_datetime=arival_da,
+        depart_station=srcinst,
+        arrival_station=destinst,
+        class_id=classinst,
+        coach_no=coach.coach_no,
+        seat_number=", ".join(reserved_seats),
+        fare=tot_fare,  #  calculated fare in search train function.
+        booking_state='R'  # Assuming booking status is 'Reserved'
+        )
+     print("successfully booked.")
+        # Create passenger entries associated with the ticket
+     # Iterate through each passenger and assign a seat number
+     for index, passenger_data in enumerate(passengers):
+        seat_number = reserved_seats[index]  # Get the corresponding reserved seat number
+        passenger_master.objects.create(
+            name=passenger_data['name'],
+            age=passenger_data['age'],
+            gender=passenger_data['gender'],
+            pnr_no=ticket,
+            seat_no=seat_number  # Assign the seat number to the passenger
+        )
+     print("passengers added sucessfully.")
+
+    
+         
+     request.session.flush()
+
+     print(pnr)
+    #  return HttpResponse("booking done.")
+     return render(request,"booking.html",{'pnr':pnr,'trains':trains,'station':stations,'paxs':passengers,'fare':tot_fare,'dat':dat})
+
+# create admin panel  function 
+def admin_panel(request):
+    return render(request,"admin.html")
+
+def manage_feedback(request):
+    feedbacks = user_feedback.objects.all()
+
 
 

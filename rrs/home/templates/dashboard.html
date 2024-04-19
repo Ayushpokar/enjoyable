@@ -28,7 +28,7 @@
            
     
             <div class="ms-10">
-              <b> Welcome {{ User }}!</b>
+              <b> Welcome {{ user.User }}!</b>
               <button type="Submit"  class="btn btn-warning mx-1"><a href="/logout/" style="text-decoration: none;" >Sign-out</a></button>
             </div>
           </div>
@@ -38,10 +38,10 @@
       <form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;" action="/search"  method='post'>
         {% csrf_token %}
           <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
-          <div class="col-12">
+          <div class="col-12" >
           
             <label for="source" >Source:</label>
-            <select name="source" class="form-control">
+            <select id="source" name="source" class="form-control">
               {% for station in stn %}
               <option value="{{station.station_code}}">{{station.station_name}}</option>
               {% endfor %}
@@ -52,9 +52,9 @@
                   <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
                   </svg>
           </div>
-          <div class=" col-12">
+          <div class=" col-12" >
             <label for="destination">Destination:</label>
-            <select name="destination" class="form-control ">
+            <select id="destination" name="destination" class="form-control " >
               {% for station in stn %}
               <option value="{{station.station_code}}">{{station.station_name}}</option>
               {% endfor %}
@@ -62,7 +62,7 @@
           <div>
             <div class="col-12 pt-5">      
               <label for="depart_date">Departure Date:</label>
-            <input type="date" class="form-control" name="depart_date" placeholder="">
+            <input type="date" class="form-control" name="depart_date" id="depart_date" placeholder="">
           </div>
           <div class="col-12 pt-5">
             <label for="class">Class</label>
@@ -78,34 +78,41 @@
           </div>
          
           <div class="mt-4 text-center mb-2">
-            <button type="submit" class="btn btn-primary" onclick="search()">Search</button>
+            <button type="submit" class="btn btn-primary" onclick=" return search()">Search</button>
           </div>
       
       
       
       </form>
       <script>
-        function search(){
-          source = document.getElementById("source").value;
-          destination=document.getElementById("destination").value;
-          date=document.getElementById("date").value;
-          cls=document.getElementById("class").value;
-          if(source!="" & destination!="" & date!="")
-            window.location.href="/search?src="+source+"&dest="+destination+"&d="+date+"&cls="+cls; 
-          else
-            alert("Please fill all the fields");  
-            /* var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-              if (this.readyState ==  4 && this.status == 200) {
-                console.log(this.responseText);
-              }
-            };
-            xhttp.open("GET", "/search?" + "src=" + source + "&dest=" + destination + "&d=" + date, true);
-            xhttp.send(); */
-           // return false;
+        function search() {
+          // Get form inputs
+          var source = document.getElementById("source").value;
+          var destination = document.getElementById("destination").value;
+          var departDate = document.getElementById("depart_date").value;
+          var today = new Date().toISOString().split('T')[0]; // Get current date
+
+          // Check if any field is empty
+          if (source.trim() === '' || destination.trim() === '' || departDate.trim() === '') {
+            alert("Please fill in all fields.");
+            return false;
           }
-      
+
+          // Check if source and destination are same
+          if (source === destination) {
+            alert("Source and destination cannot be the same.");
+            return false;
+          }
+
+          // Check if depart date is before the current date
+          if (departDate < today) {
+            alert("Please enter a correct departure date.");
+            return false;
+          }
+
+          // If all validations pass, submit the form
+          return true;
+        }
       </script>
-      </script>
-      </body>
-      </html>
+  </body>
+</html>

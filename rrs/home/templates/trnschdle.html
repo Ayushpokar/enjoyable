@@ -4,52 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Railway Reservation System{% endblock %}</title>
+   
     <!-- Add your CSS links or styles here -->
 </head>
 <body>
     <div id="content">
     <!-- trainschedule.html -->
 
-<!-- {% block title %}Train Schedule{% endblock %} -->
 
-<!-- {% block content %} -->
+
+
   <h1>Train Schedule</h1>
-<!-- 
-  {% if schedule %}
-    <p>Train: {{ schedule.0.train.train_name }}</p>
-    <p>Train Number: {{ schedule.0.train.train_number }}</p>
-
-    <h2>Schedule</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Schedule ID</th>
-          <th>Route ID</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Week</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for entry in schedule %}
-          <tr>
-            <td>{{ entry.schedule_id }}</td>
-            <td>{{ entry.route_id }}</td>
-            <td>{{ entry.start_date }}</td>
-            <td>{{ entry.end_date }}</td>
-            <td>{{ entry.week }}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-  {% else %}
-    <p>No schedule found for the specified train and date.</p>
-  {% endif %}
-{% endblock %}
-
-    </div> -->
+  <form action="" method="post">
+  {% csrf_token %}
+  <div>
+  <label>Enter Train_no</label>
+  <input type="number" name="trn_no" id="trn_no">
+  <input type="submit" value="Submit">
+  </div>
+</form>
     <!-- Add your JavaScript links or scripts here -->
 </body>
 </html>

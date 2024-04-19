@@ -7,7 +7,8 @@
     <title>search for train </title>
 </head>
 <body>
-    <form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;" action=""  method="post">
+  <h1 style="color: red;"> this is srchtrn page</h1> 
+    <form id="searchtrainform" class="row g-3 figure  mx-5 mt-5" style="width: 500px; background-color:cadetblue;" action=""  method="post" onsubmit="return search()">
         {% csrf_token %}
           <h3 class="text-center text-primary-emphasis">BOOK TICKET</h3>
           <div class="col-12">
@@ -36,7 +37,7 @@
             </select>
           </div>
           <div class="mt-4 text-center mb-2">
-            <button type="submit" class="btn btn-primary" onclick="search()">Search</button>
+            <button type="submit" class="btn btn-primary" onclick="return search()">Search</button>
           </div>
       
       
@@ -48,10 +49,13 @@
           destination=document.getElementById("destination").value;
           depart_date=document.getElementById("depart_date").value;
           cls=document.getElementById("class").value;
-          if(source!="" & destination!="" & date!="")
-            window.location.href="/search?src="+source+"&dest="+destination+"&d="+depart_date+"&cls="+cls; 
+          if(source==destination)
+            alert("Source and Destination cannot be same");
           else
-            alert("Please fill all the fields");  
+            if(source!="" & destination!="" & date!="")
+              window.location.href="/search?src="+source+"&dest="+destination+"&d="+depart_date+"&cls="+cls; 
+            else
+              alert("Please fill all the fields");  
             /* var xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function() {
               if (this.readyState ==  4 && this.status == 200) {

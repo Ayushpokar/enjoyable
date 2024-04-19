@@ -92,8 +92,5 @@ class Migration(migrations.Migration):
             name='train_no',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='home.train_master'),
         ),
-        migrations.AlterUniqueTogether(
-            name='ticket_master',
-            unique_together={('PNR_NO', 'train_no')},
-        ),
+       
     ]

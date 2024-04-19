@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="/static/payment.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Details</h1>
+        <form action="/booking" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="amount">Amount TO Pay</label>
+                <input type="text" id="amount"  value="{{ fare }} " name="amount" disabled> 
+            </div>
+            <div class="form-group">
+                <label for="cardholder">Card holder Name</label>
+                <input type="text" id="cardholder" name="cardholder" placeholder="Enter Name" required>
+            </div>
+            <div class="form-group">
+                <label for="cardnumber">Card Number</label>
+                <input type="text" id="cardnumber" name="cardnumber" placeholder="Enter Card Number" pattern="[0-9]{16}" required>
+            </div>
+            <div class="form-group">
+                <label for="expiry">Expiry Date</label>
+                <input type="text" id="expiry" name="expiry" placeholder="MM/YY" pattern="(0[1-9]|1[0-2])\/([0-9]{2})"  required>
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" name="cvv" placeholder="Enter CVV Number" pattern="[0-9]{3,4}" required>
+            </div>
+            <button type="submit">Pay</button>
+            <p>
+                NOTE:<br>
+                1) All the information are required.<br>
+                2) Card Number should be in this format : xxxx xxxx xxxx xxxx.<br>
+                3) Behind the card CVV number is given.<br>
+                4) Please do no close the window while payment is processing.<br>
+            </p>
+        </form>
+    </div>
+    
+</body>
+</html>

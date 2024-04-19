@@ -96,6 +96,8 @@ class passenger_master(models.Model):
     name = models.CharField(max_length=30)
     age = models.PositiveSmallIntegerField()
     gender = models.CharField(max_length=6)
+    seat_no=models.CharField(max_length=5,default=None)
+    pnr_no=models.ForeignKey('ticket_master',on_delete=models.CASCADE,default=None)
     class Meta:
         db_table = "passenger_master"
     
@@ -173,27 +175,40 @@ class ScheduleMaster(models.Model):
         #return f"Schedule {self.schedule_id}: {self.train.name} - {self.start_date}-{self.end_date}, Week:{self.week
         return f"Schedule {self.schedule_id}: {self.train.train_name} - {self.start_date}"
 # create model for coach master
-# class coach_master(models.Model)
-#     coach_id=models.IntegerField(primary_key=True)
-#     coach_type=models.CharField(max_length=20)  ##AC1,AC2,AC3,AC3,S1,S2
-#     train_no=models.ForeignKey("train_master", on_delete=models.CASCADE, related_name='coaches')
+class coach(models.Model):
+    coach_no=models.CharField(max_length=10,unique=True)
+    coach_type=models.ForeignKey('class_master',on_delete=models.CASCADE)
+    capacity_passen=models.PositiveIntegerField()
+     
+    class Meta:
+        db_table="coach"
 
-#     def __str__(self):
-#         return f"Coach {self.coach_id}: {self.coach_type} - {self.train.train_name}"
+    def __str__(self):
+        return f"{self.coach_no} - {self.coach_type.class_name} "
 
-# class s
+# create model for seat
+class seat(models.Model):
+    seat_no=models.CharField(max_length=10)
+    coach=models.ForeignKey('coach',on_delete=models.CASCADE,to_field='coach_no')
+    is_reserved=models.BooleanField(default=False)
 
-
+    class Meta:
+        db_table = "seat"
+    def __str__(self):
+        return f"{self.seat_no} - {self.coach.coach_no} - {self.coach.coach_type.class_name}"
+    
+# create models for booking
 
 class ticket_master(models.Model):
-    PNR_NO=models.CharField(primary_key=True,max_length=10,default=get_random_string)
+    PNR_NO=models.CharField(primary_key=True,max_length=10)
     train_no=models.ForeignKey("train_master", on_delete=models.CASCADE, related_name='tickets')
-    pass_id=models.ForeignKey("passenger_master",on_delete=models.CASCADE)
-    depart_station=models.ForeignKey("station_master", on_delete=models.CASCADE,related_name='depart_ticket')
-    arrival_station=models.ForeignKey("station_master", on_delete=models.CASCADE, related_name='arrival_ticket')
+    arrival_datetime=models.CharField(max_length=255,default=None)
+    departure_datetime=models.CharField(max_length=255,default=None)
+    depart_station=models.ForeignKey("station_master", on_delete=models.CASCADE,related_name='depart_ticket',to_field="station_code")
+    arrival_station=models.ForeignKey("station_master", on_delete=models.CASCADE, related_name='arrival_ticket',to_field="station_code")
     class_id = models.ForeignKey("class_master",on_delete=models.CASCADE,related_name= 'ticket_classes') 
-    coach_typ = models.CharField(max_length=20)
-    seat_number = models.IntegerField()   ## Can be a single number or range of numbers like 1-10  etc.
+    coach_no=models.CharField(max_length=5,default=None)
+    seat_number = models.CharField(max_length=255)   ## Can be a single number or range of numbers like 1-10  etc.
     fare = models.DecimalField(decimal_places=2, max_digits=8)
     booking_status = [
                  ('R','Reserved'),
@@ -204,8 +219,21 @@ class ticket_master(models.Model):
     
     booking_state = models.CharField(max_length=1,choices=booking_status)
     reservation_time = models.DateTimeField(auto_now_add=True)  
-
+    
     class Meta:
-       unique_together = (('PNR_NO', 'train_no'), )
+            ordering = ['PNR_NO']
 
+class payment_master(models.Model):
+    pnr_no=models.ForeignKey("ticket_master",on_delete=models.CASCADE,related_name='payment')
+    card_holdername=models.CharField(max_length=50)
+    card_number=models.CharField(max_length=16)
+    card_expiry=models.DateField()
+    amount_paid=models.DecimalField(decimal_places=2,max_digits=8)
+    payment_date=models.DateTimeField(auto_now_add=True)    # auto_now_add=True :- it will automatically add the current date and time when the record is created.  
+    payment_choice=[
+        ('CNF','CONFIRMED'),
+        ('PEN','PENDING'),
+    ]
+    payment_status=models.CharField(max_length=3,choices=payment_choice)
+    payment_method=models.CharField(max_length=10)
 
