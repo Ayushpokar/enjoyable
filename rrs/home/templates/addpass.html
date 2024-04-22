@@ -10,6 +10,7 @@
         margin: 0;
         padding: 0;
         background-color: #f4f4f4;
+        text-align: center;
     }
 
     .container {
@@ -29,11 +30,12 @@
         display: block;
         font-weight: bold;
         margin-bottom: 5px;
+        text-align: center;
     }
 
     input[type="text"],
     input[type="number"] {
-        width: 100%;
+        width: 25%;
         padding: 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
@@ -51,6 +53,9 @@
     input[type="submit"]:hover {
         background-color: #0056b3;
     }
+    h2{
+        text-align: center;
+    }
 </style>
 </head>
 <body>
@@ -58,8 +63,8 @@
         {% csrf_token %}
     <h2>Passenger Information</h2>
     <label for="passengerCount">Number of passengers:</label>
-    <input type="number" id="passengerCount" name="passengerCount" min="1" max="5">
-    <button onclick="addPassengerFields()">Add Passenger Details</button>
+    <input type="number" id="passengerCount" name="passengerCount" min="1" max="5"><br>
+    <button onclick="addPassengerFields()" style="background-color: chocolate">Add Passenger Details</button>
     
         <div id="passengerDetails"></div>
         <input type="submit" value="Submit">

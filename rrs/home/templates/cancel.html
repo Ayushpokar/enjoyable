@@ -13,6 +13,8 @@
   
     
     <header class="p-3 bg-primary">
+     
+    
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
            
@@ -35,19 +37,27 @@
           </div>
         </div>
       </header>
+      {% if messages %}
+      {% for message in messages %}
+      <li><div class="alert alert-danger" role="alert">
+        {{ message }}
+      </div></li>
+      {% endfor %}
+      {% endif %}
     
-  <div style="background-color:rgb(96, 191, 123);width: 400px;margin-left: 12cm;margin-top: 2cm;" class="rounded" >
+  <div style="background-color:cadetblue;width: 400px;margin-left: 12cm;margin-top: 2cm;" class="rounded" >
     <form action="" class="rounded" method="post">
       {% csrf_token %}
         <h5 class="text-center text-primary-emphasis">Cancel Ticket</h5>
-      <div class="col- pr-3">
+      <div class="col-10 mx-3 pr-3">
         <label for="pnr" class="form-label  text-light">Input your PNR:</label>
-        <input type="text" class="form-control" name="pnr">
+        <input type="text" class="form-control  " name="pnr">
       </div>
       <div class="text-center mt-2 pb-2">
         <button class="btn btn-primary ">Cancel Ticket</button>
       </div>
     </form>
   </div>
+   
 </body>
 </html>

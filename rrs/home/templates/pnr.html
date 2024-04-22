@@ -9,7 +9,7 @@
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 </head>
 
-<body style="background-image: url('/static/train\ bg.jpg'); background-repeat: no-repeat;">
+<body >
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
@@ -42,15 +42,87 @@
   
 
   <div style="background-color:rgb(96, 191, 123);width: 400px;margin-left: 12cm;margin-top: 2cm;" class="rounded" >
-    <form action="" class="rounded">
+    <form action="" class="rounded" method="POST">
+      {% csrf_token %}
       <h5 class="text-center text-primary-emphasis">PNR Status</h5>
       <div class="col- pr-3">
         <label for="pnr" class="form-label  text-light">Input your PNR:</label>
-        <input type="text" class="form-control">
+        <input type="text" class="form-control" name="pnr">
       </div>
       <div class="text-center mt-2 pb-2">
         <button class="btn btn-primary ">Check PNR</button>
       </div>
     </form>
-  </div>
+    </div>
+    {% if ticket %}
+      <table class="table table-striped table-responsive " style="width: 100%">  
+       
+  <thead >  
+      <tr> 
+
+        <th scope="col">PNR Number</th>  
+        <th scope="col">Train Number</th>
+        <th scope="col">Source Station</th>  
+        <th scope="col">Destination Station</th>    
+        <th scope="col">Departure  date&Time</th>   
+        <th scope="col">Arrival  date&Time</th> 
+        <th scope="col"> Class</th>
+        <th scope="col">Fare </th>
+        
+      </tr>
+  </thead>
+  
+      {% for tkt  in ticket %}
+  <thead>
+      <tr class="tr">
+        
+          <td > {{ tkt.PNR_NO }}</td>
+          <td >{{ tkt.train_no }}</td>
+          <td >{{ tkt.depart_station }}</td>
+          <td >{{ tkt.arrival_station }}</td> 
+          <td> {{ tkt.departure_datetime }} </td>
+          <td>{{ tkt.arrival_datetime }} </td>
+          <td> {{ tkt.class_id }}</td>
+          <td>{{ tkt.fare }}</td>
+      </tr>
+      {% endfor %}
+  </thead>
+ 
+
+
+    </table>
+    <table>
+    
+      
+        <tr > 
+          <h4 style="text-align: center;">Passenger Info</h6>
+      
+          <th scope="col">Passenger name</th>  
+          <th scope="col">Passenger Age</th>
+          <th scope="col">Gender</th>
+        <th>Seat no</th>
+        </tr>
+        {% if paxs %}
+        {% for pax in paxs %}
+        {% for tkt in ticket %}
+          <tr class="tr">
+            <td>{{pax.name}}</td>
+            <td>{{pax.age}}</td>
+            <td>{{pax.gender}}</td>
+            <td>{{pax.seat_no}} /{{tkt.coach_no}}</td>
+          </tr>
+        {% endfor %}
+        {% endfor %}
+        {% else %}
+            <h1 style="color: red;">No Passengers added yet! Please add a passenger.</h1>
+        {% endif %}
+        
+    {% if messages %}
+    {% for message in messages %}
+      {{ message }
+    {% endfor %}
+    {% endif %}
+    </table>
+    {% endif %}
+  
 </body>

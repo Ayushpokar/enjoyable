@@ -8,16 +8,24 @@
     <style>
 
         .registration-container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            font-variant: small-caps;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 20px;
+            font-weight: bold;
+            color: rgb(252, 252, 252);
+            
+            
             width: 400px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 0 40px rgba(8,7,16,0.6);
+            padding: 50px 30px;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 5px;
             margin: 8px 0;
             box-sizing: border-box;
         }
@@ -35,10 +43,22 @@
         button:hover {
             background-color: #45a049;
         }
+        /* form{
+          background-color: rgba(255,255,255,0.07);
+        position: absolute;
+        transform: translate(-60%,-10%);
+        top: 50%;
+        left: 50%;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.1);
+        box-shadow: 0 0 40px rgba(8,7,16,0.6);
+        padding: 50px 35px;
+        } */
     </style>
 
 </head>
-  <body style="background-image: url('D:\rrsdjango\cor\templates\train\bg.jpg'); background-repeat: no-repeat; background-size: 140%;">
+  <body style="background-image: url('/static/img4.jpg'); background-repeat: no-repeat; background-size: 140%;">
     
     
   
@@ -66,6 +86,14 @@
           </div>
         </div>
       </header>
+      {% if messages %}
+      {% for message in messages%}
+      <div class="alert alert-warning alert-dismissible fade show" role="alert">
+         {{message}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor%}
+    {% endif %}
       
 <div class="registration-container" style="margin-left: 500px; margin-top: 30px;">
   
@@ -74,30 +102,30 @@
     <form action="" method="POST" name="myForm" onsubmit="return validateForm()">
       {% csrf_token %}
         <label for="firstName">First Name:</label>
-        <input type="text" id="firstname" name="firstname" ><b><span style="color: red;" class="error" id="a" name="error"></span></b><br>
+        <input type="text" id="firstname" name="firstname" placeholder="Enter Firstname"><b><span style="color: red;" class="error" id="a" name="error"></span></b><br>
         <div id="div"></div>
 
         <label for="lastName">Last Name:</label>
-        <input type="text" id="lastname" name="lastname" ><b><span style="color: red;" class="error" id="b" name="error"></span></b><br>
+        <input type="text" id="lastname" name="lastname" placeholder="Enter Lastname"><b><span style="color: red;" class="error" id="b" name="error"></span></b><br>
 
         <label for="Username">Username:</label>
-        <input type="text"  id ="username" name="username" ><b><span style="color: red;" class="error"  id="c"></span></b><br>
+        <input type="text"  id ="username" name="username" placeholder="Enter username"><b><span style="color: red;" class="error"  id="c"></span></b><br>
 
         <label for="password">Password:</label>
-        <input type="password"  id="password" name="password" ><b><span style="color: red;" class="error" id="d"></span></b><br>
+        <input type="password"  id="password" name="password" placeholder="Enter password"><b><span style="color: red;" class="error" id="d"></span></b><br>
 
         
         <label for="dob">Date of Birth:</label>
         <input type="date"  id="dob" name="dob" ><b><span style="color: red;" class="error" id="e"></span></b><br>
 
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" ><b><span style="color: red;" class="error" id="f"></span></b><br>
+        <input type="email" id="email" name="email" placeholder="Enter your Email"><b><span style="color: red;" class="error" id="f"></span></b><br>
 
         <label for="mobile">Mobile Number:</label>
-        <input type="tel" id="mobile" name="mobile" ><b><span style="color: red;" class="error" id="g" ></span></b><br>
+        <input type="tel" id="mobile" name="mobile" placeholder="Enter your Mobile number" ><b><span style="color: red;" class="error" id="g" ></span></b><br>
 
         <label for="address">Address:</label>
-        <input type="text" id="address" name="address" ><b><span style="color: red;" class="error" id="h" ></span></b><br>
+        <input type="text" id="address" name="address" placeholder="Enter Address"><b><span style="color: red;" class="error" id="h" ></span></b><br>
 
         <input type="submit" value="Register" class="button">
        

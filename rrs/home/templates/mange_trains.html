@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Data</title>
+    <style>
+        /* CSS Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2> Manage Train Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>SR NO </th>
+                <th>Train Number</th>
+                <th>Train Name</th>
+                <th>Source Station</th>
+                <th>Destination Station</th>
+                <th>Departure Time</th>
+                <th>Arrival Time</th>
+                <th>Journey Duration</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for train in trains %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ train.train_no }}</td>
+                <td>{{ train.train_name }}</td>
+                <td>{{ train.source_station }}</td>
+                <td>{{ train.dest_station }}</td>
+                <td>{{ train.depart_time }}</td>
+                <td>{{ train.arrival_time }}</td>
+                <td>{{ train.journey_duration }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

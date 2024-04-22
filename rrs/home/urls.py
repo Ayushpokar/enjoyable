@@ -27,6 +27,9 @@ urlpatterns = [
     path("addtrains/",views.addtrains,name= "add trains"),
     path("addstation/",views.addstation,name="add station"),
     path("addroutestn/",views.addroutestn,name="add route"),
+    path("addschedule",views.addschedule,name="addschedule"),
+    path("manage feedback",views.manage_feedback,name="manage feedback"),
+    path("manage trains",views.manage_trains,name="manage trains")
     
     
     

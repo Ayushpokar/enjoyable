@@ -10,7 +10,7 @@
           font-family: Arial, sans-serif;
           margin: 0;
           padding: 0;
-          background-image: url('/static/train\ bg.jpg'); background-repeat: no-repeat;
+          /* background-image: url('/static/train\ bg.jpg'); background-repeat: no-repeat; */
           
         }
         
@@ -34,12 +34,14 @@
         table {
           width: 100%;
           border-collapse: collapse;
+          /* margin-bottom: 20px; */
+         
         }
         
         th,
         td {
           padding: 10px;
-          border: 1px solid #ddd;
+          border: 3px solid #ddd;
           text-align: left;
         }
         
@@ -52,24 +54,36 @@
           background-color: #f2f2f2;
         }
         
+        tr:nth-child(odd) {
+          background-color: #f2f2f2;
+        }
+        
         button {
           background-color: #4CAF50;
           color: white;
           padding: 10px 20px;
           border: none;
           cursor: pointer;
+          margin-left: 40%;
+          margin-top: 30px;
+          
         }
         
         button:hover {
           background-color: #45a049;
         }
-       
+       h2,h3{
+        text-align: center;
+        
+       }
+      
+
         </style>
       </head>
       <body class="bg-primary-subtle">
     
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-      
+      <h2> Review details of passengers and Train </h2>
 <form action="/payment" method="post">
   {% csrf_token %}
 <table class="table table-striped table-responsive " style="width: 100%">  
@@ -82,7 +96,7 @@
         <th scope="col">  Destination Station</th>    
         <th scope="col">Departure  date&Time</th>   
         <th scope="col">Arrival  date&Time</th> 
-        <th scope="col"> Quota</th>
+        <th scope="col"> Class</th>
         <th scope="col">Fare</th>
       </tr>
   </thead>
@@ -95,9 +109,9 @@
           <td >{{ train.train_name }}</td>
           <td >{{ station.src }}</td>
           <td >{{ station.dest }}</td> 
-          <td> {{ train.depart_date }}  {{ train.depart_time }}</td>
-          <td></td>
-          <td> </td>
+          <td> {{ dat.depart_date }}  {{ dat.depart_time }}</td>
+          <td>{{ dat.arrival_date }} {{ dat.arrival_time }}</td>
+          <td> {{ clss }}</td>
           <td>{{ fare }}</td>
       </tr>
       {% endfor %}
@@ -106,7 +120,7 @@
 
   <table>
     <tr align="left"> 
-      <h6>Passenger Info</h6>
+      <h3>Passenger Info</h3>
   
       <th scope="col">Passenger name</th>  
       <th scope="col">Passenger Age</th>
@@ -127,7 +141,7 @@
     
        </table>
 
-<button id="button" >Confirm</button>
+<button id="button" >Confirm & Make payment</button>
 {% if message is defined %}
   <div style="color:red;">{{message}}</div>
 {% endif %}

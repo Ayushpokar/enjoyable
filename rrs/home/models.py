@@ -82,7 +82,8 @@ class train_schedule(models.Model):
 
     # stop_time = property(get_stop_time,set_stop_time)
    
-    
+    def __str__(self):
+        return f'{self.train_no}-{self.station_code}'
 
     class Meta:
         db_table= "train_schedule"
@@ -98,12 +99,13 @@ class passenger_master(models.Model):
     gender = models.CharField(max_length=6)
     seat_no=models.CharField(max_length=5,default=None)
     pnr_no=models.ForeignKey('ticket_master',on_delete=models.CASCADE,default=None)
+    def __str__(self):
+        return self.name
     class Meta:
         db_table = "passenger_master"
     
 class class_master(models.Model):
     class_id = models.IntegerField(primary_key=True)
-    class_name = models.CharField(max_length=10)
     class_name = models.CharField(max_length=20,null=False)
     description= models.TextField(max_length=100)
     features = models.TextField(max_length=100)
@@ -111,8 +113,9 @@ class class_master(models.Model):
    
     class Meta:
         db_table = "class_master"
-        # for calculating fare
-
+    
+    def __str__(self):
+        return self.class_name
 
 class RouteMaster(models.Model):
     route_id = models.AutoField(primary_key=True)
@@ -207,7 +210,7 @@ class ticket_master(models.Model):
     depart_station=models.ForeignKey("station_master", on_delete=models.CASCADE,related_name='depart_ticket',to_field="station_code")
     arrival_station=models.ForeignKey("station_master", on_delete=models.CASCADE, related_name='arrival_ticket',to_field="station_code")
     class_id = models.ForeignKey("class_master",on_delete=models.CASCADE,related_name= 'ticket_classes') 
-    coach_no=models.CharField(max_length=5,default=None)
+    coach_no=models.ForeignKey("coach",on_delete=models.CASCADE,to_field="coach_no",default=None)
     seat_number = models.CharField(max_length=255)   ## Can be a single number or range of numbers like 1-10  etc.
     fare = models.DecimalField(decimal_places=2, max_digits=8)
     booking_status = [
@@ -222,6 +225,8 @@ class ticket_master(models.Model):
     
     class Meta:
             ordering = ['PNR_NO']
+    def __str__(self):
+        return f"{self.PNR_NO} - {self.train_no} - {self.depart_station} - {self.arrival_station}"
 
 class payment_master(models.Model):
     pnr_no=models.ForeignKey("ticket_master",on_delete=models.CASCADE,related_name='payment')
