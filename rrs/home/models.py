@@ -132,17 +132,7 @@ class RouteMaster(models.Model):
     class Meta:
         db_table = "route_master"
 
-class routestation(models.Model):
-    id = models.AutoField(primary_key=True)
-    train_no = models.ForeignKey('train_master',on_delete=models.CASCADE)
-    station_id = models.ForeignKey('station_Master', on_delete=models.PROTECT)
-    sequence_no = models.PositiveSmallIntegerField() # Sequence number of the station in a train journey
-                                                # 1 means it is the first station and so on.
-    arrival_time = models.TimeField()
-    departure_time = models.TimeField()
 
-    class Meta:
-        db_table="routestation"
 
 
 # A Train can have multiple schedules for different days
@@ -177,6 +167,8 @@ class ScheduleMaster(models.Model):
     def __str__(self):
         #return f"Schedule {self.schedule_id}: {self.train.name} - {self.start_date}-{self.end_date}, Week:{self.week
         return f"Schedule {self.schedule_id}: {self.train.train_name} - {self.start_date}"
+    class Meta:
+        db_table = "schedule"
 # create model for coach master
 class coach(models.Model):
     coach_no=models.CharField(max_length=10,unique=True)
@@ -215,16 +207,16 @@ class ticket_master(models.Model):
     fare = models.DecimalField(decimal_places=2, max_digits=8)
     booking_status = [
                  ('R','Reserved'),
-                 ('A','Allocated'),
-                 ('P','Paid'),
-                 ('N','Not Paid'),
+                 
                 ]
     
     booking_state = models.CharField(max_length=1,choices=booking_status)
     reservation_time = models.DateTimeField(auto_now_add=True)  
+    username=models.ForeignKey("user_master",on_delete=models.CASCADE,related_name='user_tickets',to_field="username",default=None)
     
     class Meta:
             ordering = ['PNR_NO']
+            db_table="ticket_master"
     def __str__(self):
         return f"{self.PNR_NO} - {self.train_no} - {self.depart_station} - {self.arrival_station}"
 
@@ -242,3 +234,7 @@ class payment_master(models.Model):
     payment_status=models.CharField(max_length=3,choices=payment_choice)
     payment_method=models.CharField(max_length=10)
 
+    def __str__(self):
+        return f"{self.pnr_no} - {self.card_holdername}"
+    class Meta:
+        db_table="payment_master"

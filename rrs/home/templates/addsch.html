@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Schedule</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="time"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Train Schedule</h2>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="train_no">Train Number:</label>
+                
+                <select name="train_no" id="train_no">
+                <option>select</option>
+                {% for train in trn %}
+                <option value="{{ train.train_no }}" >{{train.train_no }} - {{train.train_name}}</option>
+                <!-- <input type="text" id="train_no" name="train_no" required> -->
+           
+                {% endfor %}
+            </select>
+            </div>
+            <div class="form-group">
+                <label for="station_code">Station Code:</label>
+                <select name="station_code" id="">
+                <option value="">select</option>
+                {% for station in stn %}
+                <option value="{{station.station_code}}">{{station.station_name}} - {{station.station_code}}</option>
+            
+                <!-- <input type="text" id="station_code" name="station_code" required> -->
+                {% endfor %}
+            </select>
+               
+            </div>
+            <div class="form-group">
+                <label for="stop_time">Stop Time:</label>
+                <input type="text" id="stop_time" name="stop_time">
+            </div>
+            <div class="form-group">
+                <label for="depart_time">Departure Time:</label>
+                <input type="time" id="depart_time" name="depart_time">
+            </div>
+            <div class="form-group">
+                <label for="arrival_time">Arrival Time:</label>
+                <input type="time" id="arrival_time" name="arrival_time" required>
+            </div>
+            <div class="form-group">
+                <label for="day">Day:</label>
+                <input type="number" id="day" name="day" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="seq">Sequence:</label>
+                <input type="number" id="seq" name="seq" min="1" required>
+            </div>
+            <div class="form-group">
+                <label for="distance">Distance:</label>
+                <input type="number" id="distance" name="distance" min="0" required>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>

@@ -120,16 +120,21 @@
       <th scope="col">Passenger name</th>  
       <th scope="col">Passenger Age</th>
       <th scope="col">Gender</th>
-	  <th>Seat no</th>
+	    <th>Seat no</th>
     </tr>
     {% if paxs %}
+    
     {% for pax in paxs %}
+    
       <tr class="tr">
         <td>{{pax.pas_name}}</td>
         <td>{{pax.pas_age}}</td>
         <td>{{pax.pas_gender}}</td>
-    		<td>{{ coache }}{{ pax.pas_seat}}</td>
+       
+    		<td>{{ coache }}{{ pax.pas_seat }}</td>
+       
       </tr>
+    
     {% endfor %}
     {% else %}
         <h1 style="color: red;">No Passengers added yet! Please add a passenger.</h1>

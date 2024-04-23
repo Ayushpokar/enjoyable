@@ -18,7 +18,7 @@
     
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
               <li><a href="/dashboard" class="nav-link px-2 text-white">Home</a></li>
-              <li><a href="" class="nav-link px-2 text-white">Train Schedules</a></li>
+              <li><a href="/Train schedules" class="nav-link px-2 text-white">Train Schedules</a></li>
               <li><a href="/PNR status" class="nav-link px-2 text-white">PNR Status</a></li>
               <li><a href="/cancel ticket" class="nav-link px-2 text-white">Cancel Ticket</a></li>
               <li><a href="/about us" class="nav-link px-2 text-white">About</a></li>
@@ -34,6 +34,18 @@
           </div>
         </div>
         </header>
+        
+          {% if messages %}
+          <div class="alert alert-danger d-flex align-items-center" role="alert">
+            <!--  -->
+            <div><strong>
+                {{message}}
+              </strong>
+            </div>
+          </div>
+          {% endif %}
+
+       
       
         <form id="searchtrainform" class="row g-3 shadow figure  mx-5 mt-5 rounded" style="width: 500px; background-color:cadetblue;" action="/search"  method='post'>
           {% csrf_token %}
@@ -104,6 +116,7 @@
             alert("Please enter a correct departure date.");
             return false;
           }
+          
 
           // If all validations pass, submit the form
           return true;
